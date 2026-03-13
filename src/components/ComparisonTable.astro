@@ -1,0 +1,78 @@
+---
+interface Props {
+  headers: string[];
+  rows: Array<Record<string, string>>;
+  caption?: string;
+  highlights?: number[];
+}
+
+const { headers, rows, caption, highlights = [] } = Astro.props;
+---
+
+<div class="my-10 max-w-4xl mx-auto">
+  {/* Desktop table */}
+  <div class="hidden md:block overflow-x-auto rounded-xl border border-gray-200 shadow-sm">
+    <table class="w-full text-left text-sm">
+      {caption && (
+        <caption class="px-6 py-3 text-left text-navy font-semibold text-lg bg-white">
+          {caption}
+        </caption>
+      )}
+      <thead>
+        <tr class="bg-navy text-white">
+          {headers.map((header, i) => (
+            <th
+              class={`px-5 py-3.5 font-semibold text-sm uppercase tracking-wide ${
+                highlights.includes(i) ? "bg-navy-dark" : ""
+              }`}
+            >
+              {header}
+            </th>
+          ))}
+        </tr>
+      </thead>
+      <tbody>
+        {rows.map((row, rowIndex) => (
+          <tr class={`border-t border-gray-100 ${rowIndex % 2 === 0 ? "bg-white" : "bg-gray-50"} hover:bg-coral-light/30 transition-colors`}>
+            {headers.map((header, colIndex) => (
+              <td
+                class={`px-5 py-3.5 text-navy ${
+                  highlights.includes(colIndex)
+                    ? "font-semibold text-coral-dark"
+                    : ""
+                }`}
+              >
+                {row[header] || "—"}
+              </td>
+            ))}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+
+  {/* Mobile cards */}
+  <div class="md:hidden space-y-4">
+    {caption && (
+      <h3 class="text-navy font-semibold text-lg">{caption}</h3>
+    )}
+    {rows.map((row) => (
+      <div class="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden">
+        {headers.map((header, colIndex) => (
+          <div class={`flex justify-between items-center px-4 py-3 ${
+            colIndex !== headers.length - 1 ? "border-b border-gray-100" : ""
+          } ${colIndex % 2 === 0 ? "bg-white" : "bg-gray-50"}`}>
+            <span class="text-sm font-medium text-navy-light">{header}</span>
+            <span class={`text-sm text-right ${
+              highlights.includes(colIndex)
+                ? "font-semibold text-coral-dark"
+                : "text-navy"
+            }`}>
+              {row[header] || "—"}
+            </span>
+          </div>
+        ))}
+      </div>
+    ))}
+  </div>
+</div>

@@ -1,0 +1,58 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const pillarPages = [
+  { href: "/assurance-auto/", label: "Assurance Auto" },
+  { href: "/assurance-habitation/", label: "Assurance Habitation" },
+  { href: "/mutuelle-sante/", label: "Mutuelle Santé" },
+  { href: "/assurance-emprunteur/", label: "Assurance Emprunteur" },
+  { href: "/reglementation/", label: "Réglementation" },
+];
+---
+
+<BaseLayout
+  title="404 — Page introuvable | Covelia.fr"
+  description="La page que vous recherchez n'existe pas ou a été déplacée."
+>
+  <div class="flex min-h-[70vh] items-center justify-center px-4">
+    <div class="text-center max-w-lg">
+      <p class="text-8xl sm:text-9xl font-bold text-coral select-none">404</p>
+
+      <h1 class="mt-6 text-3xl sm:text-4xl font-bold text-navy">
+        Page introuvable
+      </h1>
+
+      <p class="mt-4 text-lg text-navy-light leading-relaxed">
+        Désolé, la page que vous cherchez n'existe pas, a été déplacée ou n'est
+        plus disponible. Pas de panique, vous pouvez revenir à l'accueil ou
+        explorer nos guides.
+      </p>
+
+      <a
+        href="/"
+        class="mt-8 inline-flex items-center gap-2 rounded-full bg-coral px-8 py-3 font-semibold text-white transition-colors hover:bg-coral-dark"
+      >
+        <span aria-hidden="true">&larr;</span>
+        Retour à l'accueil
+      </a>
+
+      <div class="mt-12">
+        <p class="text-sm font-semibold text-navy uppercase tracking-wide mb-4">
+          Nos guides
+        </p>
+        <ul class="flex flex-wrap justify-center gap-3">
+          {pillarPages.map((page) => (
+            <li>
+              <a
+                href={page.href}
+                class="inline-block rounded-lg border border-gray-200 px-4 py-2 text-sm font-medium text-navy transition-all hover:border-coral hover:text-coral hover:shadow-sm"
+              >
+                {page.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </div>
+</BaseLayout>

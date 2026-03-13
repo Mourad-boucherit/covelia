@@ -1,0 +1,29 @@
+---
+import ArticleLayout from "../../layouts/ArticleLayout.astro";
+import { getCollection } from "astro:content";
+
+export async function getStaticPaths() {
+  const articles = await getCollection("assurance-auto");
+  return articles.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+
+const frontmatter = {
+  ...entry.data,
+  datePublished: entry.data.datePublished.toISOString(),
+  dateModified: entry.data.dateModified?.toISOString(),
+  category: "Assurance Auto",
+  pillar: "Assurance Auto",
+  pillarSlug: "assurance-auto",
+  estimatedReadingTime: entry.data.estimatedReadingTime ?? 5,
+};
+---
+
+<ArticleLayout frontmatter={frontmatter}>
+  <Content />
+</ArticleLayout>

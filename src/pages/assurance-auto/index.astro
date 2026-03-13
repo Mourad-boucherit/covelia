@@ -1,0 +1,152 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+
+const articles = await getCollection("assurance-auto");
+
+const sortedArticles = articles.sort(
+  (a, b) =>
+    new Date(b.data.datePublished).getTime() -
+    new Date(a.data.datePublished).getTime()
+);
+
+const categoryTitle = "Assurance Auto";
+const categorySlug = "assurance-auto";
+const categoryDescription =
+  "Guides complets, comparatifs et conseils pratiques pour bien choisir votre assurance auto en France. Tout comprendre sur les garanties, les tarifs et la réglementation.";
+---
+
+<BaseLayout
+  title={`${categoryTitle} : guides et comparatifs | Covelia.fr`}
+  description={categoryDescription}
+>
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
+    <!-- Breadcrumbs -->
+    <nav aria-label="Fil d'Ariane" class="mb-8">
+      <ol class="flex items-center gap-2 text-sm text-navy-light">
+        <li>
+          <a href="/" class="hover:text-coral transition-colors">Accueil</a>
+        </li>
+        <li aria-hidden="true" class="select-none">/</li>
+        <li class="text-navy font-medium" aria-current="page">
+          {categoryTitle}
+        </li>
+      </ol>
+    </nav>
+
+    <!-- Hero -->
+    <header class="mb-16">
+      <h1 class="text-4xl sm:text-5xl font-bold text-navy mb-6">
+        {categoryTitle}
+      </h1>
+      <p class="text-xl text-navy-light max-w-3xl leading-relaxed">
+        {categoryDescription}
+      </p>
+    </header>
+
+    <!-- Introduction / Pillar content area -->
+    <section class="mb-16 max-w-3xl">
+      <div class="prose prose-lg prose-headings:text-navy prose-a:text-coral">
+        <p>
+          L'assurance auto est obligatoire en France pour tout véhicule
+          terrestre à moteur. Que vous soyez jeune conducteur, conducteur
+          expérimenté ou propriétaire de plusieurs véhicules, comprendre les
+          différentes formules et garanties est essentiel pour faire le bon
+          choix. Nos experts décryptent pour vous le marché de l'assurance
+          automobile française.
+        </p>
+        <!-- Placeholder for pillar content: 500+ words of editorial content will be added here -->
+      </div>
+    </section>
+
+    <!-- Articles grid -->
+    {sortedArticles.length > 0 && (
+      <section aria-labelledby="articles-heading" class="mb-16">
+        <h2
+          id="articles-heading"
+          class="text-2xl sm:text-3xl font-bold text-navy mb-8"
+        >
+          Tous nos articles
+        </h2>
+        <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {sortedArticles.map((entry) => {
+            const formattedDate = new Date(
+              entry.data.datePublished
+            ).toLocaleDateString("fr-FR", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            });
+            return (
+              <a
+                href={`/${categorySlug}/${entry.id}/`}
+                class="group flex flex-col rounded-xl border border-gray-200 p-6 transition-all hover:border-coral hover:shadow-lg"
+              >
+                <h3 class="text-lg font-semibold text-navy group-hover:text-coral transition-colors line-clamp-2">
+                  {entry.data.title}
+                </h3>
+                <p class="mt-3 text-sm text-navy-light line-clamp-3 flex-1">
+                  {entry.data.description}
+                </p>
+                <div class="mt-4 flex items-center gap-3 text-xs text-navy-light">
+                  <time datetime={entry.data.datePublished.toISOString()}>
+                    {formattedDate}
+                  </time>
+                  {entry.data.estimatedReadingTime && (
+                    <>
+                      <span aria-hidden="true">·</span>
+                      <span>{entry.data.estimatedReadingTime} min de lecture</span>
+                    </>
+                  )}
+                </div>
+              </a>
+            );
+          })}
+        </div>
+      </section>
+    )}
+
+    <!-- FAQ section placeholder -->
+    <section aria-labelledby="faq-heading" class="mb-16 max-w-3xl">
+      <h2
+        id="faq-heading"
+        class="text-2xl sm:text-3xl font-bold text-navy mb-8"
+      >
+        Questions fréquentes
+      </h2>
+      <div class="space-y-6">
+        <details class="group rounded-xl border border-gray-200 p-5">
+          <summary class="cursor-pointer font-semibold text-navy group-open:text-coral transition-colors">
+            Quelle est l'assurance auto minimum obligatoire en France ?
+          </summary>
+          <p class="mt-3 text-navy-light leading-relaxed">
+            La responsabilité civile (aussi appelée « assurance au tiers ») est
+            le minimum légal obligatoire. Elle couvre les dommages que vous
+            pourriez causer à des tiers avec votre véhicule.
+          </p>
+        </details>
+        <details class="group rounded-xl border border-gray-200 p-5">
+          <summary class="cursor-pointer font-semibold text-navy group-open:text-coral transition-colors">
+            Comment résilier son assurance auto ?
+          </summary>
+          <p class="mt-3 text-navy-light leading-relaxed">
+            Depuis la loi Hamon (2015), vous pouvez résilier votre assurance
+            auto à tout moment après la première année de contrat, sans frais ni
+            pénalités. Votre nouvel assureur se charge des démarches.
+          </p>
+        </details>
+        <details class="group rounded-xl border border-gray-200 p-5">
+          <summary class="cursor-pointer font-semibold text-navy group-open:text-coral transition-colors">
+            Qu'est-ce que le bonus-malus en assurance auto ?
+          </summary>
+          <p class="mt-3 text-navy-light leading-relaxed">
+            Le coefficient de bonus-malus (CRM) est un système qui récompense
+            les bons conducteurs et pénalise les conducteurs responsables de
+            sinistres. Il influe directement sur le montant de votre prime
+            d'assurance.
+          </p>
+        </details>
+      </div>
+    </section>
+  </div>
+</BaseLayout>

@@ -1,0 +1,41 @@
+---
+interface Heading {
+  depth: number;
+  slug: string;
+  text: string;
+}
+
+interface Props {
+  headings: Heading[];
+}
+
+const { headings } = Astro.props;
+
+// Filter to only h2 and h3
+const tocHeadings = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
+---
+
+{tocHeadings.length > 0 && (
+  <nav class="hidden lg:block sticky top-20 max-h-[calc(100vh-6rem)] overflow-y-auto" aria-label="Sommaire">
+    <p class="text-xs font-semibold uppercase tracking-wider text-navy mb-3">
+      Sur cette page
+    </p>
+    <ul class="space-y-1 border-l-2 border-gray-200">
+      {tocHeadings.map((heading) => (
+        <li>
+          <a
+            href={`#${heading.slug}`}
+            class:list={[
+              "block text-sm leading-snug transition-colors border-l-2 -ml-[2px]",
+              heading.depth === 2
+                ? "py-1.5 pl-4 pr-2 font-medium text-navy-light hover:text-coral hover:border-coral border-transparent"
+                : "py-1 pl-7 pr-2 text-gray-400 hover:text-coral hover:border-coral border-transparent",
+            ]}
+          >
+            {heading.text}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </nav>
+)}

@@ -1,0 +1,126 @@
+---
+interface FAQItem {
+  question: string;
+  answer: string;
+}
+
+interface ArticleData {
+  headline: string;
+  description?: string;
+  datePublished: string;
+  dateModified?: string;
+  author: {
+    name: string;
+    credentials?: string;
+  };
+  image?: string;
+}
+
+interface BreadcrumbItem {
+  name: string;
+  url: string;
+}
+
+interface SchemaItem {
+  type: "Article" | "FAQPage" | "Organization" | "BreadcrumbList" | "WebSite";
+  data?: ArticleData | FAQItem[] | BreadcrumbItem[] | Record<string, unknown>;
+}
+
+interface Props {
+  schemas: SchemaItem[];
+}
+
+const { schemas } = Astro.props;
+
+const SITE_NAME = "Covelia";
+const SITE_URL = "https://covelia.fr";
+
+function buildSchema(schema: SchemaItem): Record<string, unknown> | null {
+  switch (schema.type) {
+    case "Article": {
+      const d = schema.data as ArticleData;
+      return {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        headline: d.headline,
+        description: d.description,
+        datePublished: d.datePublished,
+        dateModified: d.dateModified || d.datePublished,
+        image: d.image,
+        author: {
+          "@type": "Person",
+          name: d.author.name,
+          ...(d.author.credentials
+            ? { jobTitle: d.author.credentials }
+            : {}),
+        },
+        publisher: {
+          "@type": "Organization",
+          name: SITE_NAME,
+          url: SITE_URL,
+        },
+      };
+    }
+
+    case "FAQPage": {
+      const items = schema.data as FAQItem[];
+      return {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: items.map((item) => ({
+          "@type": "Question",
+          name: item.question,
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: item.answer,
+          },
+        })),
+      };
+    }
+
+    case "Organization": {
+      return {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        name: SITE_NAME,
+        url: SITE_URL,
+      };
+    }
+
+    case "BreadcrumbList": {
+      const crumbs = schema.data as BreadcrumbItem[];
+      return {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: crumbs.map((crumb, index) => ({
+          "@type": "ListItem",
+          position: index + 1,
+          name: crumb.name,
+          item: crumb.url,
+        })),
+      };
+    }
+
+    case "WebSite": {
+      return {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        name: SITE_NAME,
+        url: SITE_URL,
+      };
+    }
+
+    default:
+      return null;
+  }
+}
+---
+
+{
+  schemas.map((schema) => {
+    const jsonLd = buildSchema(schema);
+    return jsonLd ? (
+      <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+    ) : null;
+  })
+}

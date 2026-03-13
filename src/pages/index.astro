@@ -1,0 +1,105 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE_DESCRIPTION, SITE_TITLE, CATEGORIES } from '../consts';
+import SchemaOrg from '../components/SchemaOrg.astro';
+---
+
+<BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION}>
+	<SchemaOrg schemas={[
+		{ type: 'Organization' },
+		{ type: 'WebSite', data: { name: 'Covelia', url: 'https://covelia.fr' } },
+	]} />
+
+	<!-- Hero Section -->
+	<section class="bg-navy-dark text-white py-20 px-4">
+		<div class="max-w-5xl mx-auto text-center">
+			<h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
+				L'assurance, <span class="text-coral">enfin</span> expliquée simplement
+			</h1>
+			<p class="text-lg md:text-xl text-gray-300 max-w-2xl mx-auto mb-8">
+				Guides complets, comparatifs indépendants et conseils d'expert pour faire les bons choix d'assurance en France.
+			</p>
+			<a
+				href="#guides"
+				class="inline-block bg-coral hover:bg-coral-dark text-white font-semibold px-8 py-4 rounded-lg transition-colors text-lg"
+			>
+				Explorer nos guides
+			</a>
+		</div>
+	</section>
+
+	<!-- 5 Pillar Cards -->
+	<section id="guides" class="py-16 px-4 bg-white">
+		<div class="max-w-6xl mx-auto">
+			<h2 class="text-3xl font-bold text-center text-navy mb-12">Nos guides par thématique</h2>
+			<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+				{CATEGORIES.map((cat) => (
+					<a
+						href={`/${cat.slug}/`}
+						class="group block bg-white border-2 border-gray-100 rounded-xl p-6 text-center hover:border-coral hover:shadow-lg transition-all"
+					>
+						<div class="w-14 h-14 bg-coral-light rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:bg-coral group-hover:text-white transition-colors">
+							<span class="text-coral text-2xl group-hover:text-white">
+								{cat.icon === 'car' && '🚗'}
+								{cat.icon === 'home' && '🏠'}
+								{cat.icon === 'heart-pulse' && '❤️'}
+								{cat.icon === 'landmark' && '🏦'}
+								{cat.icon === 'scale' && '⚖️'}
+							</span>
+						</div>
+						<h3 class="font-semibold text-navy group-hover:text-coral transition-colors">{cat.label}</h3>
+					</a>
+				))}
+			</div>
+		</div>
+	</section>
+
+	<!-- Trust Banner -->
+	<section class="py-16 px-4 bg-gray-50">
+		<div class="max-w-4xl mx-auto text-center">
+			<h2 class="text-2xl font-bold text-navy mb-8">Pourquoi nous faire confiance ?</h2>
+			<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+				<div class="flex flex-col items-center">
+					<div class="w-12 h-12 bg-coral-light rounded-full flex items-center justify-center mb-4">
+						<span class="text-coral text-xl">✓</span>
+					</div>
+					<h3 class="font-semibold text-navy mb-2">Expert assurance</h3>
+					<p class="text-sm text-gray-600">Contenus rédigés par un professionnel du secteur assurance et finance</p>
+				</div>
+				<div class="flex flex-col items-center">
+					<div class="w-12 h-12 bg-coral-light rounded-full flex items-center justify-center mb-4">
+						<span class="text-coral text-xl">📊</span>
+					</div>
+					<h3 class="font-semibold text-navy mb-2">Sources vérifiées</h3>
+					<p class="text-sm text-gray-600">Chaque information est sourcée et vérifiable — données officielles et textes de loi</p>
+				</div>
+				<div class="flex flex-col items-center">
+					<div class="w-12 h-12 bg-coral-light rounded-full flex items-center justify-center mb-4">
+						<span class="text-coral text-xl">🔄</span>
+					</div>
+					<h3 class="font-semibold text-navy mb-2">Mis à jour régulièrement</h3>
+					<p class="text-sm text-gray-600">Nos guides suivent les évolutions législatives et tarifaires du marché</p>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- CTA Section -->
+	<section class="py-16 px-4 bg-white">
+		<div class="max-w-3xl mx-auto text-center">
+			<h2 class="text-2xl font-bold text-navy mb-4">Prêt à mieux comprendre vos assurances ?</h2>
+			<p class="text-gray-600 mb-8">Commencez par le guide qui vous concerne le plus.</p>
+			<div class="flex flex-wrap justify-center gap-4">
+				<a href="/assurance-auto/" class="bg-coral hover:bg-coral-dark text-white font-semibold px-6 py-3 rounded-lg transition-colors">
+					Assurance Auto
+				</a>
+				<a href="/assurance-habitation/" class="bg-navy hover:bg-navy-light text-white font-semibold px-6 py-3 rounded-lg transition-colors">
+					Assurance Habitation
+				</a>
+				<a href="/mutuelle-sante/" class="bg-coral hover:bg-coral-dark text-white font-semibold px-6 py-3 rounded-lg transition-colors">
+					Mutuelle Santé
+				</a>
+			</div>
+		</div>
+	</section>
+</BaseLayout>

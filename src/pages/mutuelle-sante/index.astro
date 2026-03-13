@@ -1,0 +1,154 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+
+const articles = await getCollection("mutuelle-sante");
+
+const sortedArticles = articles.sort(
+  (a, b) =>
+    new Date(b.data.datePublished).getTime() -
+    new Date(a.data.datePublished).getTime()
+);
+
+const categoryTitle = "Mutuelle Santé";
+const categorySlug = "mutuelle-sante";
+const categoryDescription =
+  "Comparez les mutuelles santé et complémentaires. Guides sur les remboursements, les garanties optiques, dentaires et hospitalisation pour faire le meilleur choix.";
+---
+
+<BaseLayout
+  title={`${categoryTitle} : guides et comparatifs | Covelia.fr`}
+  description={categoryDescription}
+>
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
+    <!-- Breadcrumbs -->
+    <nav aria-label="Fil d'Ariane" class="mb-8">
+      <ol class="flex items-center gap-2 text-sm text-navy-light">
+        <li>
+          <a href="/" class="hover:text-coral transition-colors">Accueil</a>
+        </li>
+        <li aria-hidden="true" class="select-none">/</li>
+        <li class="text-navy font-medium" aria-current="page">
+          {categoryTitle}
+        </li>
+      </ol>
+    </nav>
+
+    <!-- Hero -->
+    <header class="mb-16">
+      <h1 class="text-4xl sm:text-5xl font-bold text-navy mb-6">
+        {categoryTitle}
+      </h1>
+      <p class="text-xl text-navy-light max-w-3xl leading-relaxed">
+        {categoryDescription}
+      </p>
+    </header>
+
+    <!-- Introduction / Pillar content area -->
+    <section class="mb-16 max-w-3xl">
+      <div class="prose prose-lg prose-headings:text-navy prose-a:text-coral">
+        <p>
+          La mutuelle santé (ou complémentaire santé) vient compléter les
+          remboursements de l'Assurance Maladie. Optique, dentaire,
+          hospitalisation, médecines douces : les garanties varient
+          considérablement d'un contrat à l'autre. Nos guides vous aident à
+          décrypter les offres et à trouver la mutuelle adaptée à votre profil
+          et votre budget.
+        </p>
+        <!-- Placeholder for pillar content: 500+ words of editorial content will be added here -->
+      </div>
+    </section>
+
+    <!-- Articles grid -->
+    {sortedArticles.length > 0 && (
+      <section aria-labelledby="articles-heading" class="mb-16">
+        <h2
+          id="articles-heading"
+          class="text-2xl sm:text-3xl font-bold text-navy mb-8"
+        >
+          Tous nos articles
+        </h2>
+        <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {sortedArticles.map((entry) => {
+            const formattedDate = new Date(
+              entry.data.datePublished
+            ).toLocaleDateString("fr-FR", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            });
+            return (
+              <a
+                href={`/${categorySlug}/${entry.id}/`}
+                class="group flex flex-col rounded-xl border border-gray-200 p-6 transition-all hover:border-coral hover:shadow-lg"
+              >
+                <h3 class="text-lg font-semibold text-navy group-hover:text-coral transition-colors line-clamp-2">
+                  {entry.data.title}
+                </h3>
+                <p class="mt-3 text-sm text-navy-light line-clamp-3 flex-1">
+                  {entry.data.description}
+                </p>
+                <div class="mt-4 flex items-center gap-3 text-xs text-navy-light">
+                  <time datetime={entry.data.datePublished.toISOString()}>
+                    {formattedDate}
+                  </time>
+                  {entry.data.estimatedReadingTime && (
+                    <>
+                      <span aria-hidden="true">·</span>
+                      <span>{entry.data.estimatedReadingTime} min de lecture</span>
+                    </>
+                  )}
+                </div>
+              </a>
+            );
+          })}
+        </div>
+      </section>
+    )}
+
+    <!-- FAQ section placeholder -->
+    <section aria-labelledby="faq-heading" class="mb-16 max-w-3xl">
+      <h2
+        id="faq-heading"
+        class="text-2xl sm:text-3xl font-bold text-navy mb-8"
+      >
+        Questions fréquentes
+      </h2>
+      <div class="space-y-6">
+        <details class="group rounded-xl border border-gray-200 p-5">
+          <summary class="cursor-pointer font-semibold text-navy group-open:text-coral transition-colors">
+            La mutuelle santé est-elle obligatoire ?
+          </summary>
+          <p class="mt-3 text-navy-light leading-relaxed">
+            Pour les salariés du secteur privé, oui : depuis 2016, l'employeur
+            doit proposer une complémentaire santé collective. Pour les
+            indépendants, retraités et demandeurs d'emploi, elle est facultative
+            mais vivement recommandée.
+          </p>
+        </details>
+        <details class="group rounded-xl border border-gray-200 p-5">
+          <summary class="cursor-pointer font-semibold text-navy group-open:text-coral transition-colors">
+            Qu'est-ce que le 100% Santé ?
+          </summary>
+          <p class="mt-3 text-navy-light leading-relaxed">
+            Le dispositif 100% Santé (ex-reste à charge zéro) permet un
+            remboursement intégral de certains équipements en optique, dentaire
+            et audiologie, grâce à la combinaison de l'Assurance Maladie et de
+            votre complémentaire.
+          </p>
+        </details>
+        <details class="group rounded-xl border border-gray-200 p-5">
+          <summary class="cursor-pointer font-semibold text-navy group-open:text-coral transition-colors">
+            Comment changer de mutuelle santé ?
+          </summary>
+          <p class="mt-3 text-navy-light leading-relaxed">
+            Les contrats individuels peuvent être résiliés à tout moment après
+            un an grâce à la loi du 14 juillet 2019. Pour les contrats
+            collectifs, la résiliation est possible dans certains cas
+            (départ de l'entreprise, changement de situation).
+          </p>
+        </details>
+      </div>
+    </section>
+  </div>
+</BaseLayout>

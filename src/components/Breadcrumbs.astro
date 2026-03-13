@@ -1,0 +1,54 @@
+---
+interface Props {
+  items: Array<{ label: string; href?: string }>;
+}
+
+const { items } = Astro.props;
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: items.map((item, index) => ({
+    "@type": "ListItem",
+    position: index + 1,
+    name: item.label,
+    ...(item.href ? { item: new URL(item.href, Astro.site ?? "https://covelia.fr").href } : {}),
+  })),
+};
+---
+
+<nav aria-label="Fil d'Ariane" class="my-4 max-w-4xl mx-auto">
+  <ol class="flex flex-wrap items-center gap-1 text-sm text-navy-light">
+    {items.map((item, index) => (
+      <li class="flex items-center gap-1">
+        {index > 0 && (
+          <svg
+            class="h-3.5 w-3.5 text-gray-400 shrink-0"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="2.5"
+            stroke="currentColor"
+            aria-hidden="true"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+          </svg>
+        )}
+        {item.href && index < items.length - 1 ? (
+          <a
+            href={item.href}
+            class="hover:text-coral transition-colors"
+          >
+            {item.label}
+          </a>
+        ) : (
+          <span class="text-navy font-medium" aria-current={index === items.length - 1 ? "page" : undefined}>
+            {item.label}
+          </span>
+        )}
+      </li>
+    ))}
+  </ol>
+</nav>
+
+<script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />

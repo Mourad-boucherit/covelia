@@ -1,0 +1,224 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+import SchemaOrg from "../components/SchemaOrg.astro";
+
+interface Author {
+  name: string;
+  credentials?: string;
+}
+
+interface FAQItem {
+  question: string;
+  answer: string;
+}
+
+interface RelatedArticle {
+  title: string;
+  slug: string;
+  description?: string;
+}
+
+interface Frontmatter {
+  title: string;
+  description: string;
+  datePublished: string;
+  dateModified?: string;
+  author: Author;
+  category: string;
+  pillar: string;
+  pillarSlug: string;
+  faq?: FAQItem[];
+  affiliateDisclosure?: boolean;
+  estimatedReadingTime: number;
+  tags?: string[];
+  relatedArticles?: RelatedArticle[];
+  image?: string;
+}
+
+interface Props {
+  frontmatter: Frontmatter;
+}
+
+const { frontmatter } = Astro.props;
+
+const {
+  title,
+  description,
+  datePublished,
+  dateModified,
+  author,
+  pillar,
+  pillarSlug,
+  faq,
+  affiliateDisclosure,
+  estimatedReadingTime,
+  relatedArticles,
+  image,
+} = frontmatter;
+
+const formattedDate = new Date(datePublished).toLocaleDateString("fr-FR", {
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+});
+
+const formattedModifiedDate = dateModified
+  ? new Date(dateModified).toLocaleDateString("fr-FR", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    })
+  : null;
+
+// Build schemas array
+const schemas: Array<{ type: string; data?: unknown }> = [
+  {
+    type: "Article",
+    data: {
+      headline: title,
+      description,
+      datePublished,
+      dateModified: dateModified || datePublished,
+      author,
+      image,
+    },
+  },
+  {
+    type: "BreadcrumbList",
+    data: [
+      { name: "Accueil", url: "https://covelia.fr/" },
+      { name: pillar, url: `https://covelia.fr/${pillarSlug}/` },
+      { name: title, url: Astro.url.href },
+    ],
+  },
+];
+
+if (faq && faq.length > 0) {
+  schemas.push({ type: "FAQPage", data: faq });
+}
+---
+
+<BaseLayout title={title} description={description} image={image}>
+  <SchemaOrg schemas={schemas as any} />
+
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Breadcrumbs -->
+    <nav aria-label="Fil d'Ariane" class="mb-8">
+      <ol class="flex items-center gap-2 text-sm text-navy-light">
+        <li>
+          <a href="/" class="hover:text-coral transition-colors">Accueil</a>
+        </li>
+        <li aria-hidden="true" class="select-none">/</li>
+        <li>
+          <a
+            href={`/${pillarSlug}/`}
+            class="hover:text-coral transition-colors"
+          >
+            {pillar}
+          </a>
+        </li>
+        <li aria-hidden="true" class="select-none">/</li>
+        <li class="text-navy font-medium truncate max-w-[200px]" aria-current="page">
+          {title}
+        </li>
+      </ol>
+    </nav>
+
+    <div class="flex gap-12 lg:gap-16">
+      <!-- Main content column -->
+      <article class="min-w-0 max-w-3xl flex-1">
+        <!-- Article header -->
+        <header class="mb-10">
+          <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-navy leading-tight mb-4">
+            {title}
+          </h1>
+
+          <p class="text-lg text-navy-light mb-6">{description}</p>
+
+          <div class="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-navy-light">
+            <div class="flex items-center gap-1.5">
+              <span class="font-medium text-navy">{author.name}</span>
+              {author.credentials && (
+                <span class="text-navy-light">· {author.credentials}</span>
+              )}
+            </div>
+            <span aria-hidden="true" class="hidden sm:inline">·</span>
+            <time datetime={datePublished}>{formattedDate}</time>
+            {formattedModifiedDate && (
+              <>
+                <span aria-hidden="true" class="hidden sm:inline">·</span>
+                <span>
+                  Mis à jour le <time datetime={dateModified}>{formattedModifiedDate}</time>
+                </span>
+              </>
+            )}
+            <span aria-hidden="true" class="hidden sm:inline">·</span>
+            <span>{estimatedReadingTime} min de lecture</span>
+          </div>
+        </header>
+
+        <!-- MDX content slot -->
+        <div class="prose prose-lg max-w-none prose-headings:text-navy prose-headings:font-bold prose-a:text-coral prose-a:no-underline hover:prose-a:underline prose-strong:text-navy prose-blockquote:border-coral prose-blockquote:text-navy-light">
+          <slot />
+        </div>
+
+        <!-- Affiliate disclosure -->
+        {affiliateDisclosure && (
+          <aside class="mt-12 rounded-xl border border-coral-light bg-coral-light/20 p-5 text-sm text-navy-light">
+            <p>
+              <strong class="text-navy">Transparence :</strong> Certains liens de cet article sont des liens affiliés.
+              Si vous souscrivez via ces liens, nous percevons une commission sans surcoût pour vous.
+              Cela nous aide à maintenir ce site indépendant et gratuit.
+            </p>
+          </aside>
+        )}
+
+        <!-- Related articles -->
+        {relatedArticles && relatedArticles.length > 0 && (
+          <section class="mt-16" aria-labelledby="related-heading">
+            <h2 id="related-heading" class="text-2xl font-bold text-navy mb-6">
+              Articles similaires
+            </h2>
+            <div class="grid gap-4 sm:grid-cols-2">
+              {relatedArticles.map((article) => (
+                <a
+                  href={`/${article.slug}/`}
+                  class="group rounded-xl border border-gray-200 p-5 transition-all hover:border-coral hover:shadow-md"
+                >
+                  <h3 class="font-semibold text-navy group-hover:text-coral transition-colors">
+                    {article.title}
+                  </h3>
+                  {article.description && (
+                    <p class="mt-2 text-sm text-navy-light line-clamp-2">
+                      {article.description}
+                    </p>
+                  )}
+                </a>
+              ))}
+            </div>
+          </section>
+        )}
+
+        <!-- CTA back to hub -->
+        <div class="mt-12 text-center">
+          <a
+            href={`/${pillarSlug}/`}
+            class="inline-flex items-center gap-2 rounded-full bg-coral px-6 py-3 font-semibold text-white transition-colors hover:bg-coral-dark"
+          >
+            <span aria-hidden="true">&larr;</span>
+            Retour au guide {pillar}
+          </a>
+        </div>
+      </article>
+
+      <!-- TOC sidebar (desktop only) -->
+      <aside
+        id="toc"
+        class="hidden lg:block w-64 shrink-0 sticky top-8 self-start max-h-[calc(100vh-4rem)] overflow-y-auto"
+        aria-label="Table des matières"
+      >
+        <!-- TableOfContents component will be rendered here -->
+      </aside>
+    </div>
+  </div>
+</BaseLayout>

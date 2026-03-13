@@ -1,0 +1,153 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+
+const articles = await getCollection("reglementation");
+
+const sortedArticles = articles.sort(
+  (a, b) =>
+    new Date(b.data.datePublished).getTime() -
+    new Date(a.data.datePublished).getTime()
+);
+
+const categoryTitle = "Réglementation";
+const categorySlug = "reglementation";
+const categoryDescription =
+  "Décryptage de la réglementation française en assurance. Lois, droits des assurés, obligations des assureurs et évolutions juridiques expliqués simplement.";
+---
+
+<BaseLayout
+  title={`${categoryTitle} : lois et droits des assurés | Covelia.fr`}
+  description={categoryDescription}
+>
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
+    <!-- Breadcrumbs -->
+    <nav aria-label="Fil d'Ariane" class="mb-8">
+      <ol class="flex items-center gap-2 text-sm text-navy-light">
+        <li>
+          <a href="/" class="hover:text-coral transition-colors">Accueil</a>
+        </li>
+        <li aria-hidden="true" class="select-none">/</li>
+        <li class="text-navy font-medium" aria-current="page">
+          {categoryTitle}
+        </li>
+      </ol>
+    </nav>
+
+    <!-- Hero -->
+    <header class="mb-16">
+      <h1 class="text-4xl sm:text-5xl font-bold text-navy mb-6">
+        {categoryTitle}
+      </h1>
+      <p class="text-xl text-navy-light max-w-3xl leading-relaxed">
+        {categoryDescription}
+      </p>
+    </header>
+
+    <!-- Introduction / Pillar content area -->
+    <section class="mb-16 max-w-3xl">
+      <div class="prose prose-lg prose-headings:text-navy prose-a:text-coral">
+        <p>
+          Le droit des assurances en France est en constante évolution. Loi
+          Hamon, loi Lemoine, résiliation infra-annuelle, devoir de conseil...
+          Nos experts décryptent pour vous les textes de loi, les décrets et les
+          jurisprudences qui impactent vos contrats d'assurance. Restez informé
+          de vos droits en tant qu'assuré.
+        </p>
+        <!-- Placeholder for pillar content: 500+ words of editorial content will be added here -->
+      </div>
+    </section>
+
+    <!-- Articles grid -->
+    {sortedArticles.length > 0 && (
+      <section aria-labelledby="articles-heading" class="mb-16">
+        <h2
+          id="articles-heading"
+          class="text-2xl sm:text-3xl font-bold text-navy mb-8"
+        >
+          Tous nos articles
+        </h2>
+        <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {sortedArticles.map((entry) => {
+            const formattedDate = new Date(
+              entry.data.datePublished
+            ).toLocaleDateString("fr-FR", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            });
+            return (
+              <a
+                href={`/${categorySlug}/${entry.id}/`}
+                class="group flex flex-col rounded-xl border border-gray-200 p-6 transition-all hover:border-coral hover:shadow-lg"
+              >
+                <h3 class="text-lg font-semibold text-navy group-hover:text-coral transition-colors line-clamp-2">
+                  {entry.data.title}
+                </h3>
+                <p class="mt-3 text-sm text-navy-light line-clamp-3 flex-1">
+                  {entry.data.description}
+                </p>
+                <div class="mt-4 flex items-center gap-3 text-xs text-navy-light">
+                  <time datetime={entry.data.datePublished.toISOString()}>
+                    {formattedDate}
+                  </time>
+                  {entry.data.estimatedReadingTime && (
+                    <>
+                      <span aria-hidden="true">·</span>
+                      <span>{entry.data.estimatedReadingTime} min de lecture</span>
+                    </>
+                  )}
+                </div>
+              </a>
+            );
+          })}
+        </div>
+      </section>
+    )}
+
+    <!-- FAQ section placeholder -->
+    <section aria-labelledby="faq-heading" class="mb-16 max-w-3xl">
+      <h2
+        id="faq-heading"
+        class="text-2xl sm:text-3xl font-bold text-navy mb-8"
+      >
+        Questions fréquentes
+      </h2>
+      <div class="space-y-6">
+        <details class="group rounded-xl border border-gray-200 p-5">
+          <summary class="cursor-pointer font-semibold text-navy group-open:text-coral transition-colors">
+            Qu'est-ce que la loi Hamon en assurance ?
+          </summary>
+          <p class="mt-3 text-navy-light leading-relaxed">
+            La loi Hamon (2015) permet de résilier certains contrats d'assurance
+            (auto, habitation, affinitaire) à tout moment après la première
+            année de souscription, sans frais ni pénalités. Le nouvel assureur
+            se charge des formalités de résiliation.
+          </p>
+        </details>
+        <details class="group rounded-xl border border-gray-200 p-5">
+          <summary class="cursor-pointer font-semibold text-navy group-open:text-coral transition-colors">
+            Quels sont les droits de l'assuré en cas de litige ?
+          </summary>
+          <p class="mt-3 text-navy-light leading-relaxed">
+            En cas de litige avec votre assureur, vous pouvez saisir le
+            médiateur de l'assurance gratuitement. Vous disposez également de
+            voies de recours judiciaires. Le délai de prescription en assurance
+            est de 2 ans à compter de l'événement.
+          </p>
+        </details>
+        <details class="group rounded-xl border border-gray-200 p-5">
+          <summary class="cursor-pointer font-semibold text-navy group-open:text-coral transition-colors">
+            Qu'est-ce que le devoir de conseil de l'assureur ?
+          </summary>
+          <p class="mt-3 text-navy-light leading-relaxed">
+            L'assureur a l'obligation légale de vous informer et de vous
+            conseiller sur les garanties les plus adaptées à votre situation. Ce
+            devoir de conseil s'applique lors de la souscription et tout au long
+            de la vie du contrat.
+          </p>
+        </details>
+      </div>
+    </section>
+  </div>
+</BaseLayout>
