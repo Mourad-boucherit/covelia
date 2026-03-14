@@ -77,6 +77,23 @@ Ces formulations diluent le contenu et réduisent la citabilité par les IA :
 - **Mots de liaison superflus** : "En effet", "Il convient de noter que", "Force est de constater" — aller droit au but
 - **Adverbes vagues** : "très", "vraiment", "particulièrement" — quantifier ou supprimer
 
+### 9. Longueur minimale
+- **Article pilier** : 3 000-4 500 mots
+- **Article spoke** : 1 800-2 500 mots
+- Compter les mots du contenu MDX uniquement (hors frontmatter et imports)
+
+### 10. Composants visuels
+- Minimum **3 types de composants différents** par article
+- `StatHighlight` : **1 par article**, placé dans les 500 premiers mots (après la capsule réponse)
+- `CallToAction` : **2 placements** — après l'intro et avant la FAQ
+- `InfoBox type="tip"` : au moins **1 par article**
+- `ExpertQuote` : **1 par article** — remplace les blockquotes markdown pour les citations attribuées
+- `InfoBox type="warning"` : à utiliser quand une sanction ou un risque est mentionné
+
+### 11. Paragraphes courts
+- Maximum **3-4 phrases par paragraphe**
+- Découper les blocs longs pour faciliter la lecture mobile et l'extraction IA
+
 ## Règles réglementaires (HARD GATE — violation = article rejeté)
 
 ### INTERDIT — Ne JAMAIS écrire :
@@ -120,8 +137,13 @@ import FAQSection from '@/components/FAQSection.astro';
 import ComparisonTable from '@/components/ComparisonTable.astro';
 import AffiliateLink from '@/components/AffiliateLink.astro';
 import CallToAction from '@/components/CallToAction.astro';
+import StatHighlight from '@/components/StatHighlight.astro';
+import ExpertQuote from '@/components/ExpertQuote.astro';
+import InfoBox from '@/components/InfoBox.astro';
 
 [CAPSULE RÉPONSE — 40-60 mots — réponse directe à la question du titre, contenant le keyword principal. Pas d'introduction, pas de "bienvenue", juste la réponse.]
+
+<StatHighlight value="[chiffre clé]" label="[description courte]" source="[Source, année]" context="[phrase de contexte optionnelle]" />
 
 ## [H2 — Contexte et chiffres clés]
 
@@ -161,6 +183,21 @@ Selon [Source] ([année]), [stat chiffrée]. [Analyse de cette stat].
   ]}
 />
 
+<ExpertQuote quote="[Citation pertinente d'un expert ou organisme]" author="[Nom]" title="[Titre/Fonction]" org="[Organisme]" />
+
+<InfoBox type="tip" title="[Astuce pratique]">
+[Conseil actionnable pour le lecteur, 2-3 phrases maximum.]
+</InfoBox>
+
+<CallToAction
+  title="Comparez les offres"
+  description="[Description adaptée au sujet de l'article]"
+  links={[
+    { label: "Comparer sur LeLynx", href: "[URL affiliée]", partner: "LeLynx" },
+    { label: "Comparer sur Assurland", href: "[URL affiliée]", partner: "Assurland" },
+  ]}
+/>
+
 ## Questions fréquentes
 
 <FAQSection faq={frontmatter.faq} />
@@ -183,8 +220,34 @@ N'importe JAMAIS les composants non utilisés. Si l'article n'a pas de tableau c
 ## Étape 2 : Création du fichier
 
 1. Détermine le pilier/catégorie de l'article
-2. Vérifie que le répertoire `src/content/[catégorie]/` existe (crée-le si nécessaire)
-3. Écris le fichier : `src/content/[catégorie]/[slug].mdx`
+2. **Génère le slug à partir du titre de l'article** (règle critique ci-dessous)
+3. Vérifie que le répertoire `src/content/[catégorie]/` existe (crée-le si nécessaire)
+4. Écris le fichier : `src/content/[catégorie]/[slug].mdx`
+
+### Règle de nommage du slug (CRITIQUE)
+
+Le slug = le nom du fichier MDX (sans extension) = le segment d'URL final. Il est dérivé du **titre de l'article**, PAS de la catégorie.
+
+**Règles :**
+- Le slug est la version kebab-case du titre, simplifiée et sans mots vides
+- Le slug ne doit JAMAIS être identique au nom du dossier/catégorie (sinon l'URL devient `/assurance-auto/assurance-auto/` — redondant et mauvais pour le SEO)
+- Le slug doit être descriptif et unique — un lecteur doit comprendre le sujet en lisant l'URL
+- Maximum 5-6 mots, pas d'articles ni de prépositions inutiles
+
+**Exemples :**
+
+| Titre | Catégorie | Slug | URL finale |
+|-------|-----------|------|------------|
+| "Assurance auto : guide complet pour bien s'assurer" | assurance-auto | `guide-complet-assurance-auto` | `/assurance-auto/guide-complet-assurance-auto/` |
+| "Comment résilier son assurance auto" | assurance-auto | `resilier-assurance-auto` | `/assurance-auto/resilier-assurance-auto/` |
+| "Prix assurance auto jeune conducteur en 2026" | assurance-auto | `prix-jeune-conducteur-2026` | `/assurance-auto/prix-jeune-conducteur-2026/` |
+| "Mutuelle santé : tout comprendre" | mutuelle-sante | `guide-complet-mutuelle-sante` | `/mutuelle-sante/guide-complet-mutuelle-sante/` |
+| "Loi Hamon : résilier son assurance facilement" | reglementation | `loi-hamon-resiliation-assurance` | `/reglementation/loi-hamon-resiliation-assurance/` |
+
+**Anti-patterns (INTERDIT) :**
+- `assurance-auto.mdx` dans le dossier `assurance-auto/` → URL `/assurance-auto/assurance-auto/`
+- `mutuelle-sante.mdx` dans le dossier `mutuelle-sante/` → URL `/mutuelle-sante/mutuelle-sante/`
+- Slugs génériques identiques au pilier
 
 ## Étape 3 : Validation build
 
@@ -207,13 +270,28 @@ Présente un résumé de l'article créé :
 - Composants utilisés
 - Note : "Lancez `/review` pour l'audit qualité avant publication."
 
+## Composants disponibles
+
+| Composant | Props | Usage |
+|-----------|-------|-------|
+| `FAQSection` | `faq: Array<{question, answer}>` | FAQ schema.org, 1 par article |
+| `ComparisonTable` | `headers: string[], rows: Array<Record<string,string>>, caption?, highlights?` | Tableaux comparatifs |
+| `AffiliateLink` | `href: string, label: string, partner?: string` | Lien affilié inline |
+| `CallToAction` | `title?, description?, links: Array<{label, href, partner}>` | Bloc CTA, 2 par article |
+| `StatHighlight` | `value: string, label: string, source: string, context?: string` | Stat héro, 1 dans les 500 premiers mots |
+| `ExpertQuote` | `quote: string, author: string, title: string, org?: string` | Citation attribuée, 1 par article |
+| `InfoBox` | `type?: 'tip'\|'warning'\|'info'\|'important', title?: string` | Callout via `<slot />`, min 1 tip par article |
+
 ## Rappels critiques
 - Les dates dans le contenu et le frontmatter doivent être en 2026
 - Le title doit faire ≤65 caractères
 - La description doit faire ≤160 caractères
 - Les FAQ doivent avoir entre 5 et 8 questions
-- Le slug doit être en kebab-case
+- Le slug doit être en kebab-case, dérivé du titre, et JAMAIS identique au nom de la catégorie (voir règle de nommage Étape 2)
 - Les URLs affiliées viennent de `src/data/affiliates.ts`
+- Longueur : pilier 3 000-4 500 mots, spoke 1 800-2 500 mots
+- Minimum 3 types de composants visuels différents par article
+- Paragraphes courts : max 3-4 phrases
 
 ## Skills liés
 - Brief manquant ? → Lancez `/research [keyword]`

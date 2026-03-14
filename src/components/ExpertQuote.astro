@@ -1,0 +1,29 @@
+---
+interface Props {
+  quote: string;
+  author: string;
+  title: string;
+  org?: string;
+}
+
+const { quote, author, title, org } = Astro.props;
+
+const initial = author.charAt(0).toUpperCase();
+---
+
+<figure class="not-prose border-l-4 border-coral pl-6 my-10 max-w-3xl mx-auto">
+  <blockquote class="text-lg italic text-navy-light leading-relaxed">
+    &laquo;&nbsp;{quote}&nbsp;&raquo;
+  </blockquote>
+  <figcaption class="mt-4 flex items-center gap-3">
+    <span class="flex h-10 w-10 items-center justify-center rounded-full bg-coral text-white font-bold text-sm shrink-0" aria-hidden="true">
+      {initial}
+    </span>
+    <div>
+      <p class="font-semibold text-navy text-sm">{author}</p>
+      <p class="text-xs text-navy-light">
+        {title}{org && <span>, {org}</span>}
+      </p>
+    </div>
+  </figcaption>
+</figure>

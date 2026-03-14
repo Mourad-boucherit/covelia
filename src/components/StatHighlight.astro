@@ -1,0 +1,17 @@
+---
+interface Props {
+  value: string;
+  label: string;
+  source: string;
+  context?: string;
+}
+
+const { value, label, source, context } = Astro.props;
+---
+
+<figure class="not-prose bg-gray-50 rounded-2xl p-8 text-center border-t-4 border-coral my-10 max-w-2xl mx-auto">
+  <p class="text-4xl font-bold text-coral mb-2">{value}</p>
+  <p class="text-lg font-semibold text-navy mb-1">{label}</p>
+  {context && <p class="text-sm text-navy-light mt-2">{context}</p>}
+  <figcaption class="text-xs text-gray-400 mt-3">Source : {source}</figcaption>
+</figure>

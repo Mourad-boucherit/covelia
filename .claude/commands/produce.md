@@ -135,8 +135,10 @@ Rédige l'article MDX complet en suivant strictement ces règles :
 - **Densité stats** : 1 stat sourcée / 150-200 mots (format: "Selon [Source] ([année]), [donnée]")
 - **Entités nommées ≥5** : lois, organismes, assureurs — jamais de langage générique
 - **Hiérarchie** : minimum 4 H2, pas de niveaux sautés
-- **Citation expert** : au moins 1 citation attribuée
+- **Citation expert** : au moins 1 citation attribuée via `<ExpertQuote>`
 - **Ton** : informatif, neutre, factuel, vouvoiement
+- **Longueur** : pilier 3 000-4 500 mots, spoke 1 800-2 500 mots
+- **Paragraphes courts** : max 3-4 phrases par paragraphe
 
 ### Règles réglementaires (HARD GATE)
 - **JAMAIS** : comparaison personnalisée, formulaires, recommandation spécifique, "selon votre profil", "nous vous conseillons"
@@ -174,11 +176,20 @@ relatedArticles: [slugs existants]
 - `FAQSection` : `faq: Array<{question, answer}>`
 - `ComparisonTable` : `headers: string[], rows: Array<Record<string,string>>, caption?: string, highlights?: number[]`
 - `AffiliateLink` : `href: string, label: string, partner?: string`
-- `CallToAction` : `title?: string, description?: string, links: Array<{label, href, partner}>`
+- `CallToAction` : `title?: string, description?: string, links: Array<{label, href, partner}>` — **2 par article** (après intro + avant FAQ)
+- `StatHighlight` : `value: string, label: string, source: string, context?: string` — **1 par article**, dans les 500 premiers mots
+- `ExpertQuote` : `quote: string, author: string, title: string, org?: string` — **1 par article**, remplace les blockquotes markdown pour citations attribuées
+- `InfoBox` : `type?: 'tip'|'warning'|'info'|'important', title?: string` — contenu via `<slot />`, min **1 tip** par article
+
+### Règle de nommage du slug (CRITIQUE)
+Le slug = nom du fichier MDX (sans extension) = segment d'URL final. Il est dérivé du **titre de l'article**, JAMAIS identique au nom de la catégorie.
+- Ex: titre "Assurance auto : guide complet" → slug `guide-complet-assurance-auto` (PAS `assurance-auto`)
+- Ex: titre "Comment résilier son assurance auto" → slug `resilier-assurance-auto`
+- Maximum 5-6 mots, kebab-case, sans articles ni prépositions inutiles
 
 ### Post-écriture
 1. Crée le répertoire `src/content/[catégorie]/` si nécessaire
-2. Écrit le fichier MDX
+2. Écrit le fichier MDX avec le slug dérivé du titre (JAMAIS le nom de la catégorie)
 3. Lance `npm run build` pour valider
 
 **Pas de subagents pour la rédaction** — cohérence de ton exige un seul rédacteur.
@@ -192,7 +203,7 @@ Audite l'article selon 3 axes :
 ### GEO Score (X/10)
 | Critère | Pts |
 |---------|-----|
-| Capsule 40-60 mots | /2 |
+| Capsule 40-60 mots | /1 |
 | Densité stats 1/200 mots | /2 |
 | FAQ 5-8 questions | /1 |
 | Entités nommées ≥5 | /1 |
@@ -200,6 +211,7 @@ Audite l'article selon 3 axes :
 | Liens internes ≥2 | /1 |
 | Sources externes ≥3 | /1 |
 | Citation expert | /1 |
+| Diversité visuelle (3+ composants) | /1 |
 
 ### Conformité (PASS/FAIL)
 Scan pour : comparaison personnalisée, collecte leads, conseil personnalisé, disclosure manquant.

@@ -10,3 +10,40 @@
 
 	--font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
 }
+
+/* H2 : barre corail à gauche */
+.prose :where(h2) {
+	border-left: 4px solid var(--color-coral);
+	padding-left: 0.75rem;
+}
+
+/* Espacement généreux avant H2 */
+.prose > :where(* + h2) {
+	margin-top: 3.5rem;
+}
+
+/* Séparateur corail-light avant chaque H2 (sauf premier) */
+.prose > :where(h2:not(:first-child))::before {
+	content: "";
+	display: block;
+	width: 4rem;
+	height: 2px;
+	background: var(--color-coral-light);
+	margin-bottom: 2.5rem;
+}
+
+/* Marqueurs de liste en corail */
+.prose :where(ul > li)::marker {
+	color: var(--color-coral);
+}
+.prose :where(ol > li)::marker {
+	color: var(--color-coral);
+	font-weight: 600;
+}
+
+/* Blockquote amélioré */
+.prose :where(blockquote) {
+	border-left-width: 4px;
+	border-radius: 0 0.75rem 0.75rem 0;
+	padding: 1rem 1.25rem;
+}

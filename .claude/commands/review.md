@@ -22,14 +22,15 @@ Tu audites un article Covelia.fr selon 3 axes et produis un scorecard détaillé
 
 | # | Critère | Points | Comment vérifier |
 |---|---------|--------|-----------------|
-| 1 | **Capsule réponse 40-60 mots** | /2 | Compte les mots du premier paragraphe après le frontmatter et les imports. Doit être entre 40 et 60 mots. Doit répondre directement à la question du titre. 2pts si parfait, 1pt si 30-70 mots, 0pt sinon. |
+| 1 | **Capsule réponse 40-60 mots** | /1 | Compte les mots du premier paragraphe après le frontmatter et les imports. Doit être entre 40 et 60 mots. Doit répondre directement à la question du titre. 1pt si 30-70 mots, 0pt sinon. |
 | 2 | **Densité statistique (1 stat/200 mots)** | /2 | Compte le nombre total de mots et le nombre de stats sourcées (pattern: "Selon [Source]", chiffres avec %, euros, nombres). Ratio attendu : 1 stat pour 150-200 mots. 2pts si ratio respecté, 1pt si proche, 0pt si insuffisant. |
 | 3 | **FAQ 5-8 questions** | /1 | Vérifie le frontmatter `faq`. 1pt si 5-8 questions, 0pt sinon. |
 | 4 | **Entités nommées ≥5** | /1 | Scanne le contenu pour les noms propres : lois, organismes, assureurs, dispositifs. 1pt si ≥5 entités distinctes, 0pt sinon. |
 | 5 | **Hiérarchie H2/H3 correcte** | /1 | Vérifie : minimum 4 H2, pas de niveaux sautés (H3 sans H2 parent), pas de H1 dans le contenu. 1pt si correct, 0pt sinon. |
 | 6 | **Liens internes ≥2** | /1 | Compte les liens vers d'autres pages Covelia (pattern: `](/` ou `href="/`). 1pt si ≥2, 0pt sinon. |
 | 7 | **Sources externes ≥3** | /1 | Compte les citations de sources (organismes, études, rapports). 1pt si ≥3 sources distinctes, 0pt sinon. |
-| 8 | **Citation expert avec attribution** | /1 | Cherche un pattern de citation : texte entre guillemets suivi d'une attribution (nom, titre). 1pt si présent, 0pt sinon. |
+| 8 | **Citation expert avec attribution** | /1 | Cherche un composant `<ExpertQuote>` ou un pattern de citation avec attribution. 1pt si présent, 0pt sinon. |
+| 9 | **Diversité visuelle (3+ composants)** | /1 | Vérifie que l'article utilise au moins 3 types de composants visuels différents parmi : StatHighlight, ExpertQuote, InfoBox, ComparisonTable, CallToAction. 1pt si ≥3 types, 0pt sinon. |
 
 **Score total : X/10**
 
@@ -97,6 +98,12 @@ Scanne le contenu pour détecter des violations. Chaque violation = FAIL automat
    - `faq` est un tableau de 5-8 objets {question, answer} si présent
    - `pillar` est un booléen
 
+2. **Slug/nom de fichier valide (CRITIQUE) :**
+   - Le nom du fichier MDX (slug) ne doit JAMAIS être identique au nom du dossier/catégorie
+   - Ex INTERDIT : `src/content/assurance-auto/assurance-auto.mdx` → URL redondante `/assurance-auto/assurance-auto/`
+   - Le slug doit être dérivé du titre de l'article, descriptif et unique
+   - Si violation détectée → FAIL automatique avec suggestion de renommage
+
 2. **Imports MDX valides :**
    - Chaque composant importé est utilisé dans l'article
    - Pas d'import de composant non utilisé
@@ -108,7 +115,12 @@ Scanne le contenu pour détecter des violations. Chaque violation = FAIL automat
 4. **Build réussi :**
    - Lance `npm run build` et vérifie l'absence d'erreurs
 
-5. **Robots.txt AI bots :**
+5. **Longueur minimale :**
+   - Article pilier (`pillar: true`) : 3 000-4 500 mots — FAIL si < 3 000
+   - Article spoke (`pillar: false`) : 1 800-2 500 mots — FAIL si < 1 800
+   - Compter les mots du contenu MDX uniquement (hors frontmatter et imports)
+
+6. **Robots.txt AI bots :**
    - Vérifie que `public/robots.txt` autorise les crawlers IA essentiels :
      - `GPTBot` (OpenAI search)
      - `ChatGPT-User` (OpenAI browsing)
@@ -117,11 +129,15 @@ Scanne le contenu pour détecter des violations. Chaque violation = FAIL automat
      - `Google-Extended` (Gemini/AI Overviews)
    - Si un bot essentiel est bloqué, signaler comme FAIL avec explication
 
-6. **Anti-patterns de rédaction :**
+7. **Anti-patterns de rédaction :**
    - Scanne pour les mots vides : "optimiser", "innovative", "solution", "performant", "incontournable"
    - Vérifie l'absence de points d'exclamation
    - Vérifie l'absence d'introductions creuses : "Dans un monde où...", "Il est important de..."
    - Résultat : WARN (liste des occurrences) — pas bloquant mais signalé
+
+8. **Paragraphes longs :**
+   - Signaler les paragraphes de plus de 5 phrases
+   - Résultat : WARN (liste des paragraphes trop longs avec numéro de ligne) — pas bloquant mais signalé
 
 **Résultat :** PASS (tous les checks OK) ou FAIL (liste des problèmes)
 
@@ -136,7 +152,7 @@ Présente le résultat dans ce format :
 ║                                                  ║
 ║  GEO Score :        X/10  [██████████░░] XX%     ║
 ║                                                  ║
-║  1. Capsule réponse      X/2  [détail]           ║
+║  1. Capsule réponse      X/1  [détail]           ║
 ║  2. Densité stats        X/2  [détail]           ║
 ║  3. FAQ 5-8 questions    X/1  [détail]           ║
 ║  4. Entités nommées ≥5   X/1  [détail]           ║
@@ -144,6 +160,7 @@ Présente le résultat dans ce format :
 ║  6. Liens internes ≥2    X/1  [détail]           ║
 ║  7. Sources externes ≥3  X/1  [détail]           ║
 ║  8. Citation expert      X/1  [détail]           ║
+║  9. Diversité visuelle   X/1  [détail]           ║
 ║                                                  ║
 ║  Conformité :       PASS ✓ / FAIL ✗              ║
 ║  [Détails si FAIL]                               ║

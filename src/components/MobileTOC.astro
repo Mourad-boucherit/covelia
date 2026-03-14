@@ -1,0 +1,41 @@
+---
+interface Props {
+  headings: Array<{ depth: number; slug: string; text: string }>;
+}
+
+const { headings } = Astro.props;
+
+const tocHeadings = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
+---
+
+{tocHeadings.length > 0 && (
+  <nav class="lg:hidden rounded-xl border border-gray-200 bg-gray-50 my-6" aria-label="Sommaire">
+    <details class="group">
+      <summary class="flex cursor-pointer items-center justify-between gap-4 px-5 py-3 text-navy font-semibold text-sm select-none list-none [&::-webkit-details-marker]:hidden">
+        <span>Sommaire</span>
+        <svg
+          class="h-5 w-5 shrink-0 text-coral transition-transform duration-200 group-open:rotate-180"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="2"
+          stroke="currentColor"
+        >
+          <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+        </svg>
+      </summary>
+      <ul class="px-5 pb-4 pt-1 space-y-1">
+        {tocHeadings.map((heading) => (
+          <li class={heading.depth === 3 ? 'ml-4' : ''}>
+            <a
+              href={`#${heading.slug}`}
+              class="block py-1 text-sm text-navy-light hover:text-coral transition-colors"
+            >
+              {heading.text}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </details>
+  </nav>
+)}

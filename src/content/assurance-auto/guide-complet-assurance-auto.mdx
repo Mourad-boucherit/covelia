@@ -32,8 +32,18 @@ faq:
 import FAQSection from '../../components/FAQSection.astro';
 import ComparisonTable from '../../components/ComparisonTable.astro';
 import CallToAction from '../../components/CallToAction.astro';
+import StatHighlight from '../../components/StatHighlight.astro';
+import ExpertQuote from '../../components/ExpertQuote.astro';
+import InfoBox from '../../components/InfoBox.astro';
 
 L'assurance auto est obligatoire en France pour tout véhicule terrestre à moteur (article L.211-1 du Code des assurances). Elle couvre au minimum la responsabilité civile du conducteur. En 2026, la prime moyenne s'établit à 681 EUR par an selon le baromètre LeLynx, avec des écarts allant de 508 EUR pour un conducteur expérimenté à 1 462 EUR pour un jeune conducteur.
+
+<StatHighlight
+  value="681 EUR/an"
+  label="Prime moyenne assurance auto en 2026"
+  source="Baromètre LeLynx, 2026"
+  context="En hausse de 4,5 à 5,5 % par rapport à 2025, soit 30 à 50 EUR de plus par contrat."
+/>
 
 ## Qu'est-ce que l'assurance auto et pourquoi est-elle obligatoire ?
 
@@ -43,9 +53,18 @@ Cette obligation s'applique même si le véhicule est stationné et ne roule pas
 
 **Les sanctions en cas de défaut d'assurance sont sévères.** L'article L.324-2 du Code de la route prévoit une amende pouvant atteindre 3 750 EUR, la suspension ou l'annulation du permis de conduire jusqu'à 3 ans, et la confiscation du véhicule. Selon l'ONISR, environ 680 000 véhicules circulent sans assurance en France, faisant du défaut d'assurance le premier délit routier du pays.
 
+<InfoBox type="warning" title="Sanctions du défaut d'assurance">
+Rouler sans assurance est un délit (art. L.324-2 du Code de la route). Les peines encourues : amende jusqu'à 3 750 EUR, suspension de permis jusqu'à 3 ans, confiscation et immobilisation du véhicule. En cas d'accident responsable, l'indemnisation des victimes reste due — de votre poche.
+</InfoBox>
+
 Pour les victimes d'accidents impliquant un conducteur non assuré, le **Fonds de Garantie des Assurances Obligatoires (FGAO)** intervient. En 2024, le FGAO a versé 123 millions d'euros pour indemniser 7 996 victimes de dommages corporels (source : FGAO, Baromètre 2025).
 
-> « Le ratio combiné de l'assurance auto dépasse 100 % en 2024 : les assureurs payent plus en sinistres qu'ils ne perçoivent en primes, ce qui explique les hausses tarifaires successives. » — France Assureurs, Rapport 2024
+<ExpertQuote
+  quote="Le ratio combiné de l'assurance auto dépasse 100 % en 2024 : les assureurs payent plus en sinistres qu'ils ne perçoivent en primes, ce qui explique les hausses tarifaires successives."
+  author="France Assureurs"
+  title="Rapport annuel"
+  org="Fédération Française de l'Assurance"
+/>
 
 ### Carte verte supprimée : le FVA prend le relais
 
@@ -135,6 +154,10 @@ Deux dispositifs légaux facilitent le changement d'assureur : la loi Hamon et l
 
 Depuis 2015, l'article L.113-15-2 du Code des assurances permet de résilier son contrat d'assurance auto **à tout moment** après la première année de souscription, sans frais ni pénalités.
 
+<InfoBox type="tip" title="Astuce résiliation loi Hamon">
+Souscrivez d'abord auprès du nouvel assureur : c'est lui qui se charge de résilier l'ancien contrat. La continuité de couverture est garantie pendant toute la transition. Aucun justificatif ni motif n'est exigé après 12 mois de contrat.
+</InfoBox>
+
 **Les étapes :**
 
 1. Choisir un nouvel assureur et souscrire un contrat
@@ -167,6 +190,16 @@ Plusieurs leviers permettent de réduire le coût de l'assurance auto sans sacri
 **Protéger le bonus-malus.** 13 années sans sinistre permettent d'atteindre le coefficient minimum de 0,50, soit une prime réduite de moitié. Une conduite prudente reste le meilleur levier à long terme.
 
 **Regrouper les contrats.** Certains assureurs accordent une réduction si plusieurs contrats (auto, habitation, santé) sont souscrits auprès du même groupe.
+
+<CallToAction
+  title="Comparez les offres d'assurance auto"
+  description="Utilisez un comparateur pour obtenir plusieurs devis et identifier l'offre la plus adaptée à votre profil et votre véhicule."
+  links={[
+    { label: "Comparer sur LeLynx", href: "https://www.lelynx.fr", partner: "LeLynx" },
+    { label: "Comparer sur Assurland", href: "https://www.assurland.com", partner: "Assurland" },
+    { label: "Comparer sur LesFurets", href: "https://www.lesfurets.com", partner: "LesFurets" }
+  ]}
+/>
 
 <CallToAction
   title="Comparez les offres d'assurance auto"

@@ -85,7 +85,7 @@ Une fois les 3 agents terminés, compile un brief dans ce format exact :
 - **Intent :** Informationnel / Commercial / Mixte
 - **Pilier :** [catégorie]
 - **Type :** Pillar / Spoke
-- **Slug proposé :** [slug-en-kebab-case]
+- **Slug proposé :** [slug dérivé du titre — JAMAIS identique au nom de la catégorie. Ex: `guide-complet-assurance-auto` et non `assurance-auto`]
 
 ## Capsule réponse (draft 40-60 mots)
 [Réponse directe à la question principale, contenant le keyword]

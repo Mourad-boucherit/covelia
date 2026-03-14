@@ -1,0 +1,35 @@
+---
+import { getPartnersForCategory } from '../data/affiliates';
+
+interface Props {
+  category: string;
+}
+
+const { category } = Astro.props;
+const partners = getPartnersForCategory(category);
+const firstPartner = partners[0];
+---
+
+{firstPartner && (
+  <div class="fixed bottom-0 inset-x-0 z-40 lg:hidden bg-coral shadow-[0_-2px_10px_rgba(0,0,0,0.1)] pb-[env(safe-area-inset-bottom)]">
+    <a
+      href={firstPartner.url}
+      rel="nofollow sponsored"
+      target="_blank"
+      class="flex items-center justify-center gap-2 px-4 py-3 text-sm font-bold text-white"
+    >
+      <span>Comparer les offres</span>
+      <svg
+        class="h-4 w-4 shrink-0"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="2.5"
+        stroke="currentColor"
+        aria-hidden="true"
+      >
+        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+      </svg>
+    </a>
+  </div>
+)}

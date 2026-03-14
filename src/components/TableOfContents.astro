@@ -16,15 +16,16 @@ const tocHeadings = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
 ---
 
 {tocHeadings.length > 0 && (
-  <nav class="hidden lg:block sticky top-20 max-h-[calc(100vh-6rem)] overflow-y-auto" aria-label="Sommaire">
+  <nav aria-label="Sommaire">
     <p class="text-xs font-semibold uppercase tracking-wider text-navy mb-3">
       Sur cette page
     </p>
-    <ul class="space-y-1 border-l-2 border-gray-200">
+    <ul id="toc-list" class="space-y-1 border-l-2 border-gray-200">
       {tocHeadings.map((heading) => (
         <li>
           <a
             href={`#${heading.slug}`}
+            data-toc-link={heading.slug}
             class:list={[
               "block text-sm leading-snug transition-colors border-l-2 -ml-[2px]",
               heading.depth === 2
@@ -39,3 +40,49 @@ const tocHeadings = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
     </ul>
   </nav>
 )}
+
+<script>
+  function initTocHighlight() {
+    const links = document.querySelectorAll<HTMLAnchorElement>('[data-toc-link]');
+    if (!links.length) return;
+
+    const slugs = Array.from(links).map((l) => l.dataset.tocLink!);
+    const headings = slugs
+      .map((slug) => document.getElementById(slug))
+      .filter((el): el is HTMLElement => el !== null);
+
+    if (!headings.length) return;
+
+    let activeSlug = slugs[0];
+
+    function setActive(slug: string) {
+      if (slug === activeSlug) return;
+      activeSlug = slug;
+      links.forEach((link) => {
+        const isActive = link.dataset.tocLink === slug;
+        link.classList.toggle('!border-coral', isActive);
+        link.classList.toggle('!text-coral', isActive);
+      });
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            setActive(entry.target.id);
+            break;
+          }
+        }
+      },
+      { rootMargin: '-80px 0px -60% 0px', threshold: 0 }
+    );
+
+    headings.forEach((h) => observer.observe(h));
+
+    // Set initial active
+    setActive(slugs[0]);
+  }
+
+  document.addEventListener('astro:page-load', initTocHighlight);
+  initTocHighlight();
+</script>
