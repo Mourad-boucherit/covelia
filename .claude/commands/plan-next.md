@@ -104,3 +104,7 @@ Termine par : "Quel article voulez-vous écrire ? Tapez `/research [keyword]` po
 - Ne recommande JAMAIS un article déjà existant
 - Un spoke ne peut pas être recommandé si sa page pilier n'existe pas encore
 - Toujours vérifier la date actuelle pour savoir où on en est dans le calendrier
+
+## Skills liés
+- Sujet choisi ? → Lancez `/research [keyword]` pour préparer le brief
+- Pipeline complet ? → Lancez `/produce` pour tout enchaîner

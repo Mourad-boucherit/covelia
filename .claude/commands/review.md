@@ -10,10 +10,11 @@ Tu audites un article Covelia.fr selon 3 axes et produis un scorecard détaillé
 
 ## Étape 0 : Identification de l'article
 
-1. Si un slug est fourni ($ARGUMENTS), cherche le fichier dans `src/content/**/$ARGUMENTS.mdx`
-2. Si aucun argument, utilise Glob pour trouver le fichier MDX le plus récemment modifié dans `src/content/`
-3. Lis le fichier complet (frontmatter + contenu)
-4. Lis aussi `src/content.config.ts` pour le schéma Zod de référence
+1. Lis `src/data/covelia-context.md` pour le contexte éditorial de référence.
+2. Si un slug est fourni ($ARGUMENTS), cherche le fichier dans `src/content/**/$ARGUMENTS.mdx`
+3. Si aucun argument, utilise Glob pour trouver le fichier MDX le plus récemment modifié dans `src/content/`
+4. Lis le fichier complet (frontmatter + contenu)
+5. Lis aussi `src/content.config.ts` pour le schéma Zod de référence
 
 ## Axe 1 : Score GEO (X/10)
 
@@ -31,6 +32,23 @@ Tu audites un article Covelia.fr selon 3 axes et produis un scorecard détaillé
 | 8 | **Citation expert avec attribution** | /1 | Cherche un pattern de citation : texte entre guillemets suivi d'une attribution (nom, titre). 1pt si présent, 0pt sinon. |
 
 **Score total : X/10**
+
+### Contexte scientifique (données Princeton GEO)
+
+Ces chiffres justifient le poids de chaque critère et doivent être mentionnés dans le scorecard quand un critère est en échec :
+
+| Technique GEO | Impact sur la visibilité AI | Critères liés |
+|---------------|----------------------------|---------------|
+| Citations sourcées | **+40%** de boost | Critères 2, 7 |
+| Statistiques chiffrées | **+37%** de boost | Critère 2 |
+| Citations expert | **+30%** de boost | Critère 8 |
+| Langage fluide et naturel | **+25%** de boost | Ton général |
+| Contenu structuré (headings, listes) | **+22%** de boost | Critère 5 |
+| Keyword stuffing | **-10%** de pénalité | Check négatif |
+
+### Check négatif : Keyword stuffing
+
+Vérifier que le keyword principal n'apparaît pas plus de 1 fois par 100 mots (densité > 1% = alerte). Le keyword stuffing réduit la visibilité AI de -10% selon les données Princeton. Si détecté, retirer -1 point au score GEO total et signaler dans le scorecard.
 
 ## Axe 2 : Conformité réglementaire (PASS/FAIL)
 
@@ -90,6 +108,21 @@ Scanne le contenu pour détecter des violations. Chaque violation = FAIL automat
 4. **Build réussi :**
    - Lance `npm run build` et vérifie l'absence d'erreurs
 
+5. **Robots.txt AI bots :**
+   - Vérifie que `public/robots.txt` autorise les crawlers IA essentiels :
+     - `GPTBot` (OpenAI search)
+     - `ChatGPT-User` (OpenAI browsing)
+     - `PerplexityBot` (Perplexity)
+     - `ClaudeBot` (Anthropic)
+     - `Google-Extended` (Gemini/AI Overviews)
+   - Si un bot essentiel est bloqué, signaler comme FAIL avec explication
+
+6. **Anti-patterns de rédaction :**
+   - Scanne pour les mots vides : "optimiser", "innovative", "solution", "performant", "incontournable"
+   - Vérifie l'absence de points d'exclamation
+   - Vérifie l'absence d'introductions creuses : "Dans un monde où...", "Il est important de..."
+   - Résultat : WARN (liste des occurrences) — pas bloquant mais signalé
+
 **Résultat :** PASS (tous les checks OK) ou FAIL (liste des problèmes)
 
 ## Scorecard final
@@ -136,3 +169,8 @@ Présente le résultat dans ce format :
 
 Si PRÊT À PUBLIER : "Article validé. Tapez `/publish` pour builder, committer et déployer."
 Si CORRECTIONS REQUISES : "X corrections identifiées. Voulez-vous que je les applique automatiquement ?"
+
+## Skills liés
+- Corrections appliquées ? → Relancez `/review` pour vérifier
+- Article validé ? → Lancez `/publish` pour déployer
+- Pipeline complet ? → Lancez `/produce` pour tout enchaîner

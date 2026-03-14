@@ -137,3 +137,7 @@ Termine par : "Brief validé ? Tapez `/write [slug]` pour lancer la rédaction."
 - JAMAIS de données inventées — si une stat n'est pas trouvée, l'indiquer clairement
 - Les sources doivent être vérifiables (URL ou référence précise)
 - Le brief doit contenir assez d'information pour rédiger l'article SANS recherche supplémentaire
+
+## Skills liés
+- Brief validé ? → Lancez `/write [slug]` pour rédiger l'article
+- Pipeline complet ? → Lancez `/produce` pour tout enchaîner

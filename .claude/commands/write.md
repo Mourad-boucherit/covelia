@@ -10,10 +10,11 @@ Tu rédiges un article complet pour Covelia.fr. C'est le skill le plus critique 
 
 ## Étape 0 : Récupération du contexte
 
-1. **Brief :** Le brief de `/research` devrait être dans le contexte de la conversation. Si absent, demande à l'utilisateur de lancer `/research` d'abord.
-2. **Schéma :** Lis `src/content.config.ts` pour les contraintes Zod du frontmatter.
-3. **Affiliés :** Lis `src/data/affiliates.ts` pour les partenaires disponibles dans la catégorie de l'article.
-4. **Articles existants :** Scanne `src/content/` pour les opportunités de liens internes.
+1. **Contexte Covelia :** Lis `src/data/covelia-context.md` pour l'identité, le ton, le positionnement et les contraintes.
+2. **Brief :** Le brief de `/research` devrait être dans le contexte de la conversation. Si absent, demande à l'utilisateur de lancer `/research` d'abord.
+3. **Schéma :** Lis `src/content.config.ts` pour les contraintes Zod du frontmatter.
+4. **Affiliés :** Lis `src/data/affiliates.ts` pour les partenaires disponibles dans la catégorie de l'article.
+5. **Articles existants :** Scanne `src/content/` pour les opportunités de liens internes.
 
 ## Règles GEO (NON-NÉGOCIABLES)
 
@@ -48,11 +49,33 @@ Chaque article DOIT respecter TOUS ces critères :
 - Format : *"Citation pertinente"* — **Nom, Titre/Organisme**
 - Peut être du fondateur Covelia ou d'une source externe
 
-### 6. Ton et style
+### 6. Blocs extractibles par les IA
+
+Chaque article doit contenir au moins 3 de ces 6 types de blocs, optimisés pour l'extraction par les moteurs génératifs :
+
+- **Bloc définition** : "L'assurance auto est..." en début de section — phrase déclarative complète que l'IA peut extraire telle quelle
+- **Bloc étapes** : listes numérotées pour les "comment faire" — structure HowTo extractible
+- **Bloc comparaison** : toujours utiliser `<ComparisonTable>` — données structurées comparatives
+- **Bloc avantages/inconvénients** : structure binaire claire (avantages vs limites, pas "pour/contre" promotionnel)
+- **Bloc FAQ** : via `<FAQSection>` — déjà structuré en schema FAQPage
+- **Bloc statistique** : formaliser le pattern "Selon [Source] ([année]), [stat chiffrée]." — phrase auto-suffisante citéable
+
+### 7. Ton et style
 - Informatif, neutre, factuel
 - JAMAIS promotionnel (le contenu informationnel génère 6x plus de citations IA)
 - Vouvoiement systématique
-- Phrases courtes et claires
+- Phrases courtes et claires (1 idée par phrase)
+
+### 8. Anti-patterns de rédaction (INTERDIT)
+
+Ces formulations diluent le contenu et réduisent la citabilité par les IA :
+
+- **Mots vides** : "optimiser", "innovative", "solution", "performant", "incontournable", "clé en main" — remplacer par des faits précis
+- **Voix passive** : "l'assurance est souscrite par..." → "l'assuré souscrit..."
+- **Points d'exclamation** : jamais dans un article informatif
+- **Introductions creuses** : "Dans un monde où...", "Il est important de...", "De nos jours..." — commencer directement par le contenu
+- **Mots de liaison superflus** : "En effet", "Il convient de noter que", "Force est de constater" — aller droit au but
+- **Adverbes vagues** : "très", "vraiment", "particulièrement" — quantifier ou supprimer
 
 ## Règles réglementaires (HARD GATE — violation = article rejeté)
 
@@ -191,3 +214,8 @@ Présente un résumé de l'article créé :
 - Les FAQ doivent avoir entre 5 et 8 questions
 - Le slug doit être en kebab-case
 - Les URLs affiliées viennent de `src/data/affiliates.ts`
+
+## Skills liés
+- Brief manquant ? → Lancez `/research [keyword]`
+- Article terminé ? → Lancez `/review` pour l'audit qualité
+- Pipeline complet ? → Lancez `/produce` pour tout enchaîner

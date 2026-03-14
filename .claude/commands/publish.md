@@ -112,3 +112,7 @@ Après le push :
 - Si le build échoue, corriger avant de continuer
 - Un commit = un article (sauf batch explicitement demandé)
 - Toujours utiliser des messages de commit conventionnels
+
+## Skills liés
+- Prochain article ? → Lancez `/produce` pour le pipeline complet
+- Maillage à vérifier ? → Lancez `/link-audit` après 5-10 articles publiés
