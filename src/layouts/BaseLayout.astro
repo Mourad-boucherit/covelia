@@ -82,13 +82,25 @@ import Footer from "../components/Footer.astro";
     <Footer />
 
     <!-- Bandeau cookies RGPD -->
-    <div
-      id="cookie-banner"
-      class="fixed bottom-0 left-0 right-0 z-50 bg-navy text-white p-4 shadow-lg transition-transform"
-      style="transform: translateY(100%)"
-      role="dialog"
-      aria-label="Gestion des cookies"
-    >
+    <style>
+      #cookie-banner {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 50;
+        background: #1E293B;
+        color: #fff;
+        padding: 1rem;
+        box-shadow: 0 -2px 10px rgba(0,0,0,.2);
+        transform: translateY(100%);
+        transition: transform .4s ease;
+      }
+      #cookie-banner.visible {
+        transform: translateY(0);
+      }
+    </style>
+    <div id="cookie-banner" role="dialog" aria-label="Gestion des cookies">
       <div class="max-w-4xl mx-auto flex flex-col sm:flex-row items-center gap-4 text-sm">
         <p class="flex-1">
           Nous utilisons Google Analytics pour mesurer l'audience de notre site.
@@ -115,23 +127,22 @@ import Footer from "../components/Footer.astro";
     <script is:inline>
       (function() {
         var consent = localStorage.getItem('covelia_consent');
-        if (consent) return; // Déjà répondu, ne pas afficher
+        if (consent) return;
 
         var banner = document.getElementById('cookie-banner');
-        // Afficher le bandeau après un court délai
         setTimeout(function() {
-          banner.style.transform = 'translateY(0)';
+          banner.classList.add('visible');
         }, 1000);
 
         document.getElementById('cookie-accept').addEventListener('click', function() {
           localStorage.setItem('covelia_consent', 'granted');
           gtag('consent', 'update', { analytics_storage: 'granted' });
-          banner.style.transform = 'translateY(100%)';
+          banner.classList.remove('visible');
         });
 
         document.getElementById('cookie-reject').addEventListener('click', function() {
           localStorage.setItem('covelia_consent', 'denied');
-          banner.style.transform = 'translateY(100%)';
+          banner.classList.remove('visible');
         });
       })();
     </script>
