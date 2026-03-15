@@ -27,6 +27,35 @@ import Footer from "../components/Footer.astro";
       rel="stylesheet"
     />
 
+    <!-- Google Analytics - Consent Mode v2 (RGPD) -->
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+
+      // Défaut : tout refusé jusqu'au consentement
+      gtag('consent', 'default', {
+        analytics_storage: 'denied',
+        ad_storage: 'denied',
+        ad_user_data: 'denied',
+        ad_personalization: 'denied',
+        wait_for_update: 500
+      });
+
+      // Si déjà accepté lors d'une visite précédente
+      if (localStorage.getItem('covelia_consent') === 'granted') {
+        gtag('consent', 'update', {
+          analytics_storage: 'granted'
+        });
+      }
+
+      gtag('js', new Date());
+      gtag('config', 'G-B3J05XJSDJ', {
+        anonymize_ip: true,
+        cookie_flags: 'SameSite=None;Secure'
+      });
+    </script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-B3J05XJSDJ"></script>
+
     <SEOHead
       title={title}
       description={description}
@@ -51,5 +80,59 @@ import Footer from "../components/Footer.astro";
     </main>
 
     <Footer />
+
+    <!-- Bandeau cookies RGPD -->
+    <div
+      id="cookie-banner"
+      class="fixed bottom-0 left-0 right-0 z-50 bg-navy text-white p-4 shadow-lg transition-transform translate-y-full"
+      role="dialog"
+      aria-label="Gestion des cookies"
+    >
+      <div class="max-w-4xl mx-auto flex flex-col sm:flex-row items-center gap-4 text-sm">
+        <p class="flex-1">
+          Nous utilisons Google Analytics pour mesurer l'audience de notre site.
+          Ces données sont anonymisées.
+          <a href="/mentions-legales/" class="underline text-coral-light">En savoir plus</a>
+        </p>
+        <div class="flex gap-3 shrink-0">
+          <button
+            id="cookie-reject"
+            class="px-4 py-2 rounded-lg border border-white/30 hover:bg-white/10 transition-colors cursor-pointer"
+          >
+            Refuser
+          </button>
+          <button
+            id="cookie-accept"
+            class="px-4 py-2 rounded-lg bg-coral hover:bg-coral/90 font-medium transition-colors cursor-pointer"
+          >
+            Accepter
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script is:inline>
+      (function() {
+        var consent = localStorage.getItem('covelia_consent');
+        if (consent) return; // Déjà répondu, ne pas afficher
+
+        var banner = document.getElementById('cookie-banner');
+        // Afficher le bandeau après un court délai
+        setTimeout(function() {
+          banner.style.transform = 'translateY(0)';
+        }, 1000);
+
+        document.getElementById('cookie-accept').addEventListener('click', function() {
+          localStorage.setItem('covelia_consent', 'granted');
+          gtag('consent', 'update', { analytics_storage: 'granted' });
+          banner.style.transform = 'translateY(100%)';
+        });
+
+        document.getElementById('cookie-reject').addEventListener('click', function() {
+          localStorage.setItem('covelia_consent', 'denied');
+          banner.style.transform = 'translateY(100%)';
+        });
+      })();
+    </script>
   </body>
 </html>
