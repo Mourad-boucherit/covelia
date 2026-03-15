@@ -14,7 +14,7 @@ Tu rédiges un article complet pour Covelia.fr. C'est le skill le plus critique 
 2. **Brief :** Le brief de `/research` devrait être dans le contexte de la conversation. Si absent, demande à l'utilisateur de lancer `/research` d'abord.
 3. **Schéma :** Lis `src/content.config.ts` pour les contraintes Zod du frontmatter.
 4. **Affiliés :** Lis `src/data/affiliates.ts` pour les partenaires disponibles dans la catégorie de l'article.
-5. **Articles existants :** Scanne `src/content/` pour les opportunités de liens internes.
+5. **Maillage interne :** Lis `src/data/internal-links.ts` pour les opportunités de liens internes structurées (slugs, URLs, ancres suggérées).
 
 ## Règles GEO (NON-NÉGOCIABLES)
 
@@ -43,6 +43,9 @@ Chaque article DOIT respecter TOUS ces critères :
 - Pas de niveaux sautés (pas de H3 sans H2 parent)
 - Chaque H2 commence par répondre directement à la question du heading
 - H2 formulés comme des questions quand c'est naturel
+- **H2 = titres de section** : courts, percutants, formulés en question si possible (ex: "Comment fonctionne le bonus-malus ?")
+- **H3 = sous-titres** : plus descriptifs, servant à structurer le contenu sous un H2
+- **Séparation visuelle** : le CSS ajoute automatiquement un séparateur horizontal avant chaque H2. Ne pas ajouter de `---` markdown entre sections — le style s'en charge
 
 ### 5. Citation expert
 - Au moins 1 citation attribuée par article
@@ -78,8 +81,8 @@ Ces formulations diluent le contenu et réduisent la citabilité par les IA :
 - **Adverbes vagues** : "très", "vraiment", "particulièrement" — quantifier ou supprimer
 
 ### 9. Longueur minimale
-- **Article pilier** : 3 000-4 500 mots
-- **Article spoke** : 1 800-2 500 mots
+- **Article pilier** : 3 500-5 000 mots
+- **Article spoke** : 2 000-2 800 mots
 - Compter les mots du contenu MDX uniquement (hors frontmatter et imports)
 
 ### 10. Composants visuels
@@ -94,6 +97,60 @@ Ces formulations diluent le contenu et réduisent la citabilité par les IA :
 - Maximum **3-4 phrases par paragraphe**
 - Découper les blocs longs pour faciliter la lecture mobile et l'extraction IA
 
+### 12. Rythme visuel et aération
+- Alterner texte / composant / texte — ne jamais enchaîner plus de 3 paragraphes sans un élément visuel (InfoBox, StatHighlight, liste, tableau)
+- Après chaque H2, commencer par **1-2 phrases** de réponse directe avant de développer
+- Utiliser des **listes** (à puces ou numérotées) dès qu'il y a 3+ éléments à énumérer
+- Le CSS gère automatiquement l'espacement et les séparateurs entre sections H2 — ne pas ajouter de séparateurs manuels (`---`)
+
+### 13. Maillage interne (NON-NÉGOCIABLE)
+
+Le maillage interne est le facteur SEO le plus sous-exploité. Chaque article DOIT respecter ces seuils :
+
+**Seuils minimaux :**
+- **Article pilier** : minimum **10 liens internes**
+- **Article spoke** : minimum **8 liens internes**
+
+**Règles de placement :**
+- **1 lien par section H2** (hors FAQ), intégré naturellement dans une phrase
+- **Spoke → pilier** : lien obligatoire vers la page pilier dans les **500 premiers mots**
+- **Inter-piliers** : minimum **2 liens vers d'autres piliers** quand les sujets se recoupent (ex: auto↔réglementation pour la loi Hamon)
+- **Maximum 3 liens par section H2** — éviter le sur-maillage
+
+**Qualité des ancres :**
+- Ancres descriptives contenant des keywords (JAMAIS "cliquez ici", "en savoir plus", "cet article")
+- Varier les ancres — ne pas réutiliser la même formulation deux fois
+- Utiliser les `suggestedAnchors` de `src/data/internal-links.ts` comme base
+
+**Comment faire :**
+1. Lis `src/data/internal-links.ts` et appelle mentalement `findLinkingOpportunities(slug)`
+2. Pour chaque section H2, identifie l'article le plus pertinent à lier
+3. Insère le lien dans une phrase contextuelle naturelle
+
+**Exemples d'insertion naturelle :**
+- "La loi Hamon permet de [résilier son assurance auto](/assurance-auto/resilier-assurance-auto/) à tout moment après la première année."
+- "Le prix varie fortement selon le profil : un [jeune conducteur paie en moyenne 1 200 € par an](/assurance-auto/prix-jeune-conducteur-2026/)."
+- "Avant de choisir, il est utile de [comprendre les différentes garanties disponibles](/assurance-auto/garanties-assurance-auto/)."
+- "Les locataires ont des [obligations spécifiques en matière d'assurance habitation](/assurance-habitation/assurance-habitation-locataire/)."
+
+### 14. Variation lexicale et densité keyword
+
+**Densité maximale : 1.2%** (soit 1 occurrence du keyword exact pour 80-100 mots)
+
+**Règle de variation :** après 2 utilisations consécutives du keyword exact, utiliser obligatoirement un synonyme ou une reformulation.
+
+**Table de synonymes par catégorie :**
+
+| Catégorie | Keyword exact | Synonymes / Reformulations |
+|-----------|--------------|---------------------------|
+| assurance-auto | assurance auto | assurance automobile, contrat auto, couverture auto, protection automobile, contrat d'assurance véhicule |
+| assurance-habitation | assurance habitation | assurance multirisque habitation, MRH, contrat habitation, couverture logement, protection du logement |
+| mutuelle-sante | mutuelle santé | complémentaire santé, couverture santé, mutuelle complémentaire, contrat de complémentaire, protection santé |
+| assurance-emprunteur | assurance emprunteur | assurance de prêt, couverture emprunteur, garantie de prêt immobilier, assurance crédit immobilier |
+| Général | prix / tarif | coût, montant, prime, cotisation, budget |
+| Général | comparer | mettre en concurrence, analyser les offres, évaluer les propositions |
+| Général | résilier | mettre fin au contrat, changer d'assureur, rompre le contrat |
+
 ## Règles réglementaires (HARD GATE — violation = article rejeté)
 
 ### INTERDIT — Ne JAMAIS écrire :
@@ -107,6 +164,35 @@ Ces formulations diluent le contenu et réduisent la citabilité par les IA :
 - Parler en termes généraux : "un conducteur jeune" (pas "vous, jeune conducteur")
 - `affiliateDisclosure: true` dans le frontmatter si l'article contient des liens affiliés
 - Formulations neutres pour les CTA : "Comparer les offres sur [comparateur]" (pas "Trouvez VOTRE assurance")
+
+### Phrases INTERDITES dans les CTA (HARD GATE)
+
+Ces formulations violent la réglementation ORIAS. Leur présence = article rejeté au review :
+- "adapté à votre profil" / "adapté à votre situation" / "adapté à votre budget" / "adapté à vos besoins"
+- "personnalisé" / "personnalisée" / "personnalisés" / "personnalisées"
+- "devis personnalisé" / "devis personnalisés"
+- "Trouvez votre assurance" / "Trouvez l'assurance"
+- "la plus adaptée" / "qui vous correspond"
+
+### Templates CTA pré-approuvés par catégorie
+
+Utiliser UNIQUEMENT ces descriptions dans les composants `<CallToAction>`. Ne PAS improviser.
+
+**Assurance auto :**
+- CTA 1 (après intro) : `description="Les écarts de prix entre assureurs dépassent 50 % pour des garanties équivalentes. Un comparateur en ligne permet d'identifier les offres les plus compétitives du marché en quelques minutes."`
+- CTA 2 (avant FAQ) : `description="Selon France Assureurs, la prime moyenne d'assurance auto atteint 640 € en 2025. Comparer les offres reste le moyen le plus efficace de réduire ce budget."`
+
+**Assurance habitation :**
+- CTA 1 : `description="Le coût d'une assurance habitation varie du simple au triple selon les assureurs pour un même logement. Comparer les offres permet de trouver la meilleure couverture au meilleur prix."`
+- CTA 2 : `description="Avec une prime moyenne de 216 € par an selon France Assureurs, l'assurance habitation reste un poste où la mise en concurrence est la plus rentable."`
+
+**Mutuelle santé :**
+- CTA 1 : `description="Les tarifs et niveaux de remboursement varient considérablement d'une mutuelle à l'autre. Un comparateur permet d'analyser les garanties et les prix du marché en quelques minutes."`
+- CTA 2 : `description="Entre 30 € et plus de 100 € par mois selon les garanties, le choix d'une complémentaire santé mérite une comparaison attentive des offres disponibles."`
+
+**Assurance emprunteur :**
+- CTA 1 : `description="La loi Lemoine permet de changer d'assurance emprunteur à tout moment. Les écarts de tarifs peuvent représenter plusieurs milliers d'euros sur la durée totale du prêt."`
+- CTA 2 : `description="La délégation d'assurance emprunteur permet d'économiser jusqu'à 15 000 € sur un prêt de 250 000 € sur 20 ans selon les courtiers spécialisés."`
 
 ## Structure de l'article MDX
 
@@ -209,13 +295,47 @@ Selon [Source] ([année]), [stat chiffrée]. [Analyse de cette stat].
 
 Rédige l'article complet en suivant strictement :
 - Le brief de recherche (stats, FAQ, structure, entités)
-- Les règles GEO ci-dessus
+- Les règles GEO ci-dessus (y compris règles 13 et 14 : maillage + variation lexicale)
 - Les contraintes réglementaires
 - Le schéma Zod de `content.config.ts`
 
 **Important :** La rédaction doit être mono-thread (pas de subagents). La cohérence du ton et du style exige un seul rédacteur.
 
 N'importe JAMAIS les composants non utilisés. Si l'article n'a pas de tableau comparatif, n'importe pas ComparisonTable.
+
+## Étape 1.5 : Auto-vérification (OBLIGATOIRE avant création du fichier)
+
+AVANT de créer le fichier MDX, vérifie chaque critère et affiche les résultats. Si un critère FAIL, corrige l'article AVANT de passer à l'étape 2.
+
+| Check | Seuil | Action si FAIL |
+|-------|-------|----------------|
+| **Nombre de mots** | Pilier ≥ 3 500, Spoke ≥ 2 000 | Développer les sections les plus courtes avec des stats et exemples supplémentaires |
+| **Liens internes** | Pilier ≥ 10, Spoke ≥ 8 | Insérer des liens depuis le registry `internal-links.ts` dans les sections H2 |
+| **Lien vers pilier** | Spoke : ≥ 1 dans les 500 premiers mots | Ajouter une phrase avec lien vers le pilier de la catégorie |
+| **CTA conformité** | 0 phrase interdite (voir liste ci-dessus) | Remplacer par le template pré-approuvé de la catégorie |
+| **Keyword density** | < 1.2% du keyword exact | Alterner avec les synonymes de la table (règle 14) |
+| **Capsule réponse** | 40-60 mots | Ajuster la longueur |
+| **FAQ** | 5-8 questions | Ajouter ou retirer des questions |
+| **Composants visuels** | ≥ 3 types différents | Ajouter les composants manquants |
+
+**Format d'affichage obligatoire :**
+
+```
+AUTO-VÉRIFICATION — [slug]
+─────────────────────────────
+✓ Mots : XXXX (seuil : YYYY)
+✓ Liens internes : XX (seuil : Y)
+✓ Lien pilier : présent (ligne ~XX)
+✓ CTA conformité : 0 phrase interdite
+✓ Keyword density : X.X% (seuil : 1.2%)
+✓ Capsule : XX mots (seuil : 40-60)
+✓ FAQ : X questions (seuil : 5-8)
+✓ Composants : X types (seuil : 3)
+─────────────────────────────
+RÉSULTAT : PASS → Création du fichier
+```
+
+Si un ou plusieurs checks échouent, corriger et ré-afficher la vérification jusqu'à PASS complet.
 
 ## Étape 2 : Création du fichier
 
@@ -289,7 +409,7 @@ Présente un résumé de l'article créé :
 - Les FAQ doivent avoir entre 5 et 8 questions
 - Le slug doit être en kebab-case, dérivé du titre, et JAMAIS identique au nom de la catégorie (voir règle de nommage Étape 2)
 - Les URLs affiliées viennent de `src/data/affiliates.ts`
-- Longueur : pilier 3 000-4 500 mots, spoke 1 800-2 500 mots
+- Longueur : pilier 3 500-5 000 mots, spoke 2 000-2 800 mots
 - Minimum 3 types de composants visuels différents par article
 - Paragraphes courts : max 3-4 phrases
 

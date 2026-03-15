@@ -26,13 +26,13 @@ Tu audites un article Covelia.fr selon 3 axes et produis un scorecard détaillé
 | 2 | **Densité statistique (1 stat/200 mots)** | /2 | Compte le nombre total de mots et le nombre de stats sourcées (pattern: "Selon [Source]", chiffres avec %, euros, nombres). Ratio attendu : 1 stat pour 150-200 mots. 2pts si ratio respecté, 1pt si proche, 0pt si insuffisant. |
 | 3 | **FAQ 5-8 questions** | /1 | Vérifie le frontmatter `faq`. 1pt si 5-8 questions, 0pt sinon. |
 | 4 | **Entités nommées ≥5** | /1 | Scanne le contenu pour les noms propres : lois, organismes, assureurs, dispositifs. 1pt si ≥5 entités distinctes, 0pt sinon. |
-| 5 | **Hiérarchie H2/H3 correcte** | /1 | Vérifie : minimum 4 H2, pas de niveaux sautés (H3 sans H2 parent), pas de H1 dans le contenu. 1pt si correct, 0pt sinon. |
-| 6 | **Liens internes ≥2** | /1 | Compte les liens vers d'autres pages Covelia (pattern: `](/` ou `href="/`). 1pt si ≥2, 0pt sinon. |
+| 5 | **Hiérarchie H2/H3 correcte** | /1 | Vérifie : minimum 4 H2, pas de niveaux sautés (H3 sans H2 parent), pas de H1 dans le contenu, pas de séparateurs `---` manuels (le CSS les gère). 1pt si correct, 0pt sinon. |
+| 6 | **Liens internes ≥8** | /2 | Compte les liens vers d'autres pages Covelia (pattern: `](/` ou `href="/`). **2pts si ≥10**, 1pt si 8-9, 0pt si <8. Vérifier aussi : au moins 1 lien par section H2 (hors FAQ) + lien vers le pilier dans les 500 premiers mots pour les spokes. |
 | 7 | **Sources externes ≥3** | /1 | Compte les citations de sources (organismes, études, rapports). 1pt si ≥3 sources distinctes, 0pt sinon. |
 | 8 | **Citation expert avec attribution** | /1 | Cherche un composant `<ExpertQuote>` ou un pattern de citation avec attribution. 1pt si présent, 0pt sinon. |
 | 9 | **Diversité visuelle (3+ composants)** | /1 | Vérifie que l'article utilise au moins 3 types de composants visuels différents parmi : StatHighlight, ExpertQuote, InfoBox, ComparisonTable, CallToAction. 1pt si ≥3 types, 0pt sinon. |
 
-**Score total : X/10**
+**Score total : X/11**
 
 ### Contexte scientifique (données Princeton GEO)
 
@@ -49,7 +49,15 @@ Ces chiffres justifient le poids de chaque critère et doivent être mentionnés
 
 ### Check négatif : Keyword stuffing
 
-Vérifier que le keyword principal n'apparaît pas plus de 1 fois par 100 mots (densité > 1% = alerte). Le keyword stuffing réduit la visibilité AI de -10% selon les données Princeton. Si détecté, retirer -1 point au score GEO total et signaler dans le scorecard.
+Vérifier la densité du keyword principal avec le calcul exact :
+- Compter les occurrences exactes du keyword principal dans le contenu
+- Compter le nombre total de mots
+- Calculer : `[keyword] : X occurrences / Y mots = Z%`
+- **Afficher ce calcul dans le scorecard**
+- Seuil d'alerte : densité > 1.2% = keyword stuffing
+- Vérifier aussi : max 3 occurrences du keyword exact par section H2
+
+Le keyword stuffing réduit la visibilité AI de -10% selon les données Princeton. Si détecté (>1.2%), retirer -1 point au score GEO total et signaler dans le scorecard.
 
 ## Axe 2 : Conformité réglementaire (PASS/FAIL)
 
@@ -83,6 +91,14 @@ Scanne le contenu pour détecter des violations. Chaque violation = FAIL automat
 **Disclosure affilié (OBLIGATOIRE si liens affiliés) :**
 - Vérifie que `affiliateDisclosure: true` si des liens `rel="nofollow sponsored"` ou des composants AffiliateLink/CallToAction sont présents
 
+**CTA non conformes (INTERDIT) — scanner spécifiquement les props `title` et `description` des `<CallToAction>` :**
+- "adapté à votre profil" / "adapté à votre situation" / "adapté à votre budget" / "adapté à vos besoins"
+- "personnalisé" / "personnalisée" / "personnalisés" / "personnalisées"
+- "devis personnalisé" / "devis personnalisés"
+- "Trouvez votre assurance" / "Trouvez l'assurance"
+- "la plus adaptée" / "qui vous correspond"
+Si une phrase interdite est détectée dans un CTA → FAIL automatique avec la ligne et le remplacement suggéré (utiliser les templates pré-approuvés de `/write`)
+
 **Résultat :** PASS (aucune violation) ou FAIL (liste des violations avec numéro de ligne)
 
 ## Axe 3 : Technique (PASS/FAIL)
@@ -115,10 +131,11 @@ Scanne le contenu pour détecter des violations. Chaque violation = FAIL automat
 4. **Build réussi :**
    - Lance `npm run build` et vérifie l'absence d'erreurs
 
-5. **Longueur minimale :**
-   - Article pilier (`pillar: true`) : 3 000-4 500 mots — FAIL si < 3 000
-   - Article spoke (`pillar: false`) : 1 800-2 500 mots — FAIL si < 1 800
+5. **Longueur minimale (STRICT) :**
+   - Article pilier (`pillar: true`) : 3 500-5 000 mots — **FAIL si < 3 500**
+   - Article spoke (`pillar: false`) : 2 000-2 800 mots — **FAIL si < 2 000**
    - Compter les mots du contenu MDX uniquement (hors frontmatter et imports)
+   - **Afficher le compte exact** : "Longueur : XXXX mots (seuil : YYYY)"
 
 6. **Robots.txt AI bots :**
    - Vérifie que `public/robots.txt` autorise les crawlers IA essentiels :
@@ -150,17 +167,20 @@ Présente le résultat dans ce format :
 ║           SCORECARD — [slug de l'article]        ║
 ╠══════════════════════════════════════════════════╣
 ║                                                  ║
-║  GEO Score :        X/10  [██████████░░] XX%     ║
+║  GEO Score :        X/11  [██████████░░] XX%     ║
 ║                                                  ║
 ║  1. Capsule réponse      X/1  [détail]           ║
 ║  2. Densité stats        X/2  [détail]           ║
 ║  3. FAQ 5-8 questions    X/1  [détail]           ║
 ║  4. Entités nommées ≥5   X/1  [détail]           ║
 ║  5. Hiérarchie headings  X/1  [détail]           ║
-║  6. Liens internes ≥2    X/1  [détail]           ║
+║  6. Liens internes ≥8    X/2  [détail + count]   ║
 ║  7. Sources externes ≥3  X/1  [détail]           ║
 ║  8. Citation expert      X/1  [détail]           ║
 ║  9. Diversité visuelle   X/1  [détail]           ║
+║                                                  ║
+║  Keyword density : "[kw]" X occ / Y mots = Z%   ║
+║  Longueur : XXXX mots (seuil : YYYY)            ║
 ║                                                  ║
 ║  Conformité :       PASS ✓ / FAIL ✗              ║
 ║  [Détails si FAIL]                               ║
@@ -175,7 +195,7 @@ Présente le résultat dans ce format :
 
 ## Seuil de publication
 
-**PRÊT À PUBLIER** si : GEO ≥ 8/10 **ET** Conformité = PASS **ET** Technique = PASS
+**PRÊT À PUBLIER** si : GEO ≥ 9/11 **ET** Conformité = PASS **ET** Technique = PASS
 
 **CORRECTIONS REQUISES** sinon. Dans ce cas :
 1. Liste chaque correction nécessaire avec le numéro de ligne

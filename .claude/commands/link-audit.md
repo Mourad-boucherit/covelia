@@ -8,34 +8,13 @@ description: "Audit de maillage interne : détecte les articles orphelins et pro
 
 Tu audites le maillage interne de l'ensemble des articles Covelia.fr et proposes des améliorations.
 
-## Étape 1 : Scan de tous les articles (agents parallèles)
+## Étape 1 : Chargement des données
 
-Dispatche **1 agent par pilier** en parallèle avec le Agent tool. Chaque agent :
-
-### Instructions pour chaque agent pilier
-
-```
-Scanne tous les fichiers MDX dans `src/content/[PILIER]/`.
-
-Pour chaque article, extrais :
-1. Le slug (nom du fichier sans extension)
-2. Le title (depuis le frontmatter)
-3. Le category (depuis le frontmatter)
-4. Le pillar (true/false depuis le frontmatter)
-5. Les tags (depuis le frontmatter)
-6. Les relatedArticles (depuis le frontmatter)
-7. Tous les liens internes dans le contenu (pattern: liens vers /assurance-auto/, /assurance-habitation/, etc.)
-8. Les keywords principaux (depuis le title et les H2)
-
-Retourne ces données sous forme structurée.
-```
-
-Les 5 piliers à scanner :
-- `src/content/assurance-auto/`
-- `src/content/assurance-habitation/`
-- `src/content/mutuelle-sante/`
-- `src/content/assurance-emprunteur/`
-- `src/content/reglementation/`
+1. **Lis `src/data/internal-links.ts`** pour charger le registre centralisé de tous les articles (slugs, URLs, catégories, keywords, ancres suggérées)
+2. **Pour chaque article du registre**, lis le fichier MDX correspondant dans `src/content/[category]/[slug].mdx` et extrais :
+   - Tous les liens internes dans le contenu (pattern: `](/` ou `href="/`)
+   - Les `relatedArticles` du frontmatter
+   - Le nombre total de liens internes par article
 
 ## Étape 2 : Construction de la matrice de liens
 
@@ -76,7 +55,10 @@ Opportunités de liens entre piliers quand les sujets se recoupent :
 - assurance-emprunteur ↔ reglementation (loi Lemoine)
 - assurance-habitation ↔ assurance-auto (multi-risques)
 
-### 5. relatedArticles non à jour
+### 5. Articles sous le seuil de 8 liens internes
+Articles ayant moins de 8 liens internes sortants (ou moins de 10 pour les piliers). Afficher le nombre exact et le seuil attendu.
+
+### 6. relatedArticles non à jour
 Vérifier que le champ `relatedArticles` du frontmatter est cohérent avec les liens réels.
 
 ## Étape 4 : Proposition d'insertions

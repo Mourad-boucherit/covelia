@@ -67,11 +67,28 @@ Synthétise :
 - Le type d'intent dominant (informationnel, commercial, transactionnel)
 ```
 
-## Étape 2 : Inventaire articles existants
+## Étape 2 : Préparation du maillage interne
 
-Pendant que les agents travaillent, scanne les articles existants dans `src/content/` pour identifier les opportunités de maillage interne.
+Pendant que les agents travaillent :
 
-Lis le frontmatter de chaque article existant pour trouver des liens possibles vers/depuis le futur article.
+1. **Lis `src/data/internal-links.ts`** pour charger le registre complet des articles
+2. **Génère minimum 10 liens pré-construits** avec contexte d'insertion pour le futur article
+
+### Format des liens pré-construits
+
+Séparer en 3 catégories :
+
+**Liens obligatoires (haute pertinence) :**
+- Section "[H2 cible]" → "[phrase complète avec [ancre descriptive](/url/) intégrée naturellement]"
+- Lien pilier (pour les spokes) : "[phrase avec lien vers le pilier dans les 500 premiers mots]"
+
+**Liens recommandés (même pilier) :**
+- Section "[H2 cible]" → "[phrase avec [ancre](/url/)]"
+
+**Liens inter-piliers (si pertinent) :**
+- Section "[H2 cible]" → "[phrase avec [ancre](/url/) vers un autre pilier]"
+
+Objectif : le rédacteur (`/write`) doit pouvoir copier-coller ces phrases directement dans l'article.
 
 ## Étape 3 : Synthèse en Brief Structuré
 
@@ -114,9 +131,25 @@ Une fois les 3 agents terminés, compile un brief dans ce format exact :
 - H2 : [section comparatif si pertinent]
 - H2 : Questions fréquentes
 
-## Opportunités de maillage interne
-- Vers : [articles existants pertinents]
-- Depuis : [articles existants qui devraient lier vers celui-ci]
+## Maillage interne pré-construit (minimum 10 liens)
+
+### Liens obligatoires (haute pertinence)
+1. Section "[H2]" → "[phrase complète avec [ancre descriptive](/url/) intégrée]"
+2. ...
+
+### Lien pilier (OBLIGATOIRE pour les spokes)
+- "[phrase avec lien vers le pilier dans les 500 premiers mots]"
+
+### Liens recommandés (même pilier)
+3. Section "[H2]" → "[phrase avec [ancre](/url/)]"
+4. ...
+
+### Liens inter-piliers
+5. Section "[H2]" → "[phrase avec [ancre](/url/) vers un autre pilier]"
+6. ...
+
+### Liens entrants à créer après publication
+- [article existant] → section [H2] : insérer un lien vers le nouvel article
 
 ## Angles de différenciation vs concurrence
 - [Ce que les concurrents ne couvrent pas]

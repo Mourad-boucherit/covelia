@@ -110,7 +110,7 @@ Une fois le sujet choisi, dispatche **3 agents en parallèle** :
 
 **Agent 3 — SERP :** Analyse les résultats Google FR. Top 5 concurrents, People Also Ask, angles manquants, intent dominant.
 
-Pendant ce temps, scanne les articles existants dans `src/content/` pour les opportunités de maillage.
+Pendant ce temps, lis `src/data/internal-links.ts` pour les opportunités de maillage structurées.
 
 ### Synthèse en brief
 
@@ -120,7 +120,7 @@ Compile les résultats en un brief structuré :
 - 8-12 entités nommées
 - 5-8 questions FAQ
 - Plan article (H1, capsule, H2/H3, placement stats/tables/CTA)
-- Opportunités de maillage interne
+- Maillage interne pré-construit (minimum 10 liens depuis `internal-links.ts`)
 
 **STOP — Présenter le brief à l'utilisateur pour validation/ajustement avant de rédiger.**
 
@@ -134,10 +134,11 @@ Rédige l'article MDX complet en suivant strictement ces règles :
 - **Capsule réponse** : 40-60 mots en premier paragraphe, réponse directe, contient le keyword
 - **Densité stats** : 1 stat sourcée / 150-200 mots (format: "Selon [Source] ([année]), [donnée]")
 - **Entités nommées ≥5** : lois, organismes, assureurs — jamais de langage générique
-- **Hiérarchie** : minimum 4 H2, pas de niveaux sautés
+- **Hiérarchie** : minimum 4 H2, pas de niveaux sautés, pas de `---` manuels (le CSS ajoute les séparateurs)
+- **Rythme visuel** : alterner texte / composant / texte, max 3 paragraphes consécutifs sans élément visuel
 - **Citation expert** : au moins 1 citation attribuée via `<ExpertQuote>`
 - **Ton** : informatif, neutre, factuel, vouvoiement
-- **Longueur** : pilier 3 000-4 500 mots, spoke 1 800-2 500 mots
+- **Longueur** : pilier 3 500-5 000 mots, spoke 2 000-2 800 mots
 - **Paragraphes courts** : max 3-4 phrases par paragraphe
 
 ### Règles réglementaires (HARD GATE)
@@ -208,7 +209,7 @@ Audite l'article selon 3 axes :
 | FAQ 5-8 questions | /1 |
 | Entités nommées ≥5 | /1 |
 | Hiérarchie H2/H3 | /1 |
-| Liens internes ≥2 | /1 |
+| Liens internes ≥8 | /2 |
 | Sources externes ≥3 | /1 |
 | Citation expert | /1 |
 | Diversité visuelle (3+ composants) | /1 |
@@ -220,8 +221,19 @@ Scan pour : comparaison personnalisée, collecte leads, conseil personnalisé, d
 Frontmatter Zod-valide, imports utilisés, liens internes existants, build OK.
 
 ### Seuil
-- **GEO ≥ 8/10 ET Conformité PASS ET Technique PASS** → Phase 5
+- **GEO ≥ 9/11 ET Conformité PASS ET Technique PASS** → Phase 4.5
 - **Sinon** → Corriger automatiquement et re-auditer (max 2 itérations)
+
+---
+
+## Phase 4.5 : Vérification maillage (OBLIGATOIRE)
+
+Avant publication, vérifie spécifiquement le maillage interne :
+
+1. **Compter les liens internes** (pattern: `](/` ou `href="/`). Seuil : pilier ≥ 10, spoke ≥ 8
+2. **Vérifier le lien pilier** : pour les spokes, un lien vers la page pilier doit être présent dans les 500 premiers mots
+3. **Vérifier la distribution** : au moins 1 lien par section H2 (hors FAQ)
+4. **Si manquants** : insérer les liens depuis `src/data/internal-links.ts` avec des ancres descriptives
 
 ---
 
@@ -230,7 +242,8 @@ Frontmatter Zod-valide, imports utilisés, liens internes existants, build OK.
 1. `npm run build` final
 2. Vérifie le HTML dans `dist/`
 3. Commit avec message conventionnel : `content(pilier): add "titre"`
-4. Affiche le résumé de déploiement
+4. **Mettre à jour `src/data/internal-links.ts`** : ajouter le nouvel article au registre avec slug, url, category, pillar, title, targetKeywords et suggestedAnchors
+5. Affiche le résumé de déploiement
 
 **STOP — Attendre confirmation explicite avant `git push`.**
 

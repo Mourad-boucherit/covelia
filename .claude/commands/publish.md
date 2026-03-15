@@ -33,7 +33,22 @@ Pour chaque article nouveau/modifié, vérifie que le fichier HTML correspondant
 
 Si le HTML n'est pas généré, c'est un problème de routing. Vérifier `src/pages/`.
 
-## Étape 4 : Commit
+## Étape 4 : Mise à jour du registre de liens
+
+Après validation du build, ajouter le nouvel article au registre `src/data/internal-links.ts` :
+
+1. Lis le fichier `src/data/internal-links.ts`
+2. Ajoute une nouvelle entrée dans `articleRegistry` avec :
+   - `slug` : le nom du fichier MDX sans extension
+   - `category` : le pilier/catégorie de l'article
+   - `pillar` : true/false
+   - `url` : `/${category}/${slug}/`
+   - `title` : le titre depuis le frontmatter
+   - `targetKeywords` : les keywords principaux (depuis le frontmatter `tags` ou le titre)
+   - `suggestedAnchors` : 3-4 formulations d'ancres descriptives variées
+3. Vérifie que le fichier TypeScript est valide
+
+## Étape 5 : Commit
 
 Prépare le commit avec un message conventionnel :
 
@@ -64,7 +79,7 @@ fix(pilier): improve GEO score for "titre"
 2. NE PAS stager des fichiers sensibles (.env, credentials)
 3. Crée le commit
 
-## Étape 5 : Confirmation avant push
+## Étape 6 : Confirmation avant push
 
 Affiche un résumé avant de pousser :
 
@@ -94,7 +109,7 @@ Confirmer le push ? (oui/non)
 
 **ATTENDRE la confirmation explicite de l'utilisateur avant de pusher.**
 
-## Étape 6 : Push et déploiement
+## Étape 7 : Push et déploiement
 
 Si l'utilisateur confirme :
 ```bash

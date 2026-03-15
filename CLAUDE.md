@@ -60,5 +60,6 @@ npm run preview  # Preview du build
 | `src/layouts/ArticleLayout.astro` | Layout article avec TOC, breadcrumbs |
 | `src/components/SchemaOrg.astro` | Données structurées JSON-LD |
 | `src/data/affiliates.ts` | Registre centralisé URLs affiliés |
+| `src/data/internal-links.ts` | Registre centralisé articles + ancres pour maillage interne |
 | `public/robots.txt` | Contrôle accès bots IA |
 | `astro.config.mjs` | Config Astro (Cloudflare, sitemap, MDX, Tailwind) |
