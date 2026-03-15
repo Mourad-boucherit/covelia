@@ -10,6 +10,7 @@ import { defineConfig } from 'astro/config';
 export default defineConfig({
 	site: 'https://covelia.fr',
 	output: 'static',
+	trailingSlash: 'always',
 	adapter: cloudflare(),
 	integrations: [mdx(), sitemap()],
 	vite: {
