@@ -166,6 +166,21 @@ export const articleRegistry: ArticleLink[] = [
 			'notre guide mutuelle santé',
 		],
 	},
+	// ── Assurance Emprunteur ──
+	{
+		slug: 'guide-complet-assurance-emprunteur',
+		category: 'assurance-emprunteur',
+		pillar: true,
+		url: '/assurance-emprunteur/guide-complet-assurance-emprunteur/',
+		title: 'Assurance emprunteur : guide complet pour 2026',
+		targetKeywords: ['assurance emprunteur', 'loi Lemoine', 'délégation assurance', 'TAEA', 'prêt immobilier'],
+		suggestedAnchors: [
+			'guide complet de l\'assurance emprunteur',
+			'tout savoir sur l\'assurance de prêt',
+			'assurance emprunteur en détail',
+			'notre guide assurance emprunteur',
+		],
+	},
 ];
 
 /**
