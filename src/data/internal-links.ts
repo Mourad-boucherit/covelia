@@ -181,6 +181,21 @@ export const articleRegistry: ArticleLink[] = [
 			'notre guide assurance emprunteur',
 		],
 	},
+	// ── Réglementation ──
+	{
+		slug: 'guide-reglementation-assurance-france',
+		category: 'reglementation',
+		pillar: true,
+		url: '/reglementation/guide-reglementation-assurance-france/',
+		title: 'Réglementation assurance en France : guide complet',
+		targetKeywords: ['réglementation assurance', 'loi Hamon', 'loi Chatel', 'droits assuré', 'ACPR'],
+		suggestedAnchors: [
+			'guide de la réglementation assurance',
+			'tout savoir sur vos droits en assurance',
+			'réglementation assurance en France',
+			'les lois qui protègent les assurés',
+		],
+	},
 ];
 
 /**
