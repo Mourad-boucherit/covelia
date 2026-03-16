@@ -151,6 +151,21 @@ export const articleRegistry: ArticleLink[] = [
 			'meilleure assurance habitation 2026',
 		],
 	},
+	// ── Mutuelle Santé ──
+	{
+		slug: 'guide-complet-mutuelle-sante',
+		category: 'mutuelle-sante',
+		pillar: true,
+		url: '/mutuelle-sante/guide-complet-mutuelle-sante/',
+		title: 'Mutuelle santé : guide complet pour bien choisir',
+		targetKeywords: ['mutuelle santé', 'complémentaire santé', '100% Santé', 'contrat responsable', 'prix mutuelle'],
+		suggestedAnchors: [
+			'guide complet de la mutuelle santé',
+			'tout savoir sur la complémentaire santé',
+			'choisir sa mutuelle santé',
+			'notre guide mutuelle santé',
+		],
+	},
 ];
 
 /**
@@ -187,3 +202,4 @@ export function getPillarForCategory(category: string): ArticleLink | undefined 
 export function getSpokesForCategory(category: string): ArticleLink[] {
 	return articleRegistry.filter((a) => a.category === category && !a.pillar);
 }
+
