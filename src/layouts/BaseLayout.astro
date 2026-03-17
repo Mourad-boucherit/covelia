@@ -4,9 +4,10 @@ interface Props {
   description: string;
   image?: string;
   canonicalUrl?: string;
+  noindex?: boolean;
 }
 
-const { title, description, image, canonicalUrl } = Astro.props;
+const { title, description, image, canonicalUrl, noindex } = Astro.props;
 
 import "../styles/global.css";
 import SEOHead from "../components/SEOHead.astro";
@@ -62,6 +63,8 @@ import Footer from "../components/Footer.astro";
       canonicalUrl={canonicalUrl}
       image={image}
     />
+
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
 
     <title>{title}</title>
   </head>
