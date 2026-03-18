@@ -363,6 +363,64 @@ export const articleRegistry: ArticleLink[] = [
 			'suppression questionnaire santé loi Lemoine',
 		],
 	},
+	// ── Assurance Habitation (nouveaux) ──
+	{
+		slug: 'resilier-assurance-habitation',
+		category: 'assurance-habitation',
+		pillar: false,
+		url: '/assurance-habitation/resilier-assurance-habitation/',
+		title: 'Résilier assurance habitation : démarches et délais',
+		targetKeywords: ['résilier assurance habitation', 'résiliation habitation', 'loi Hamon habitation', 'changer assurance habitation'],
+		suggestedAnchors: [
+			'résilier son assurance habitation',
+			'résiliation de l\'assurance habitation',
+			'changer d\'assurance habitation',
+			'procédure de résiliation habitation',
+		],
+	},
+	{
+		slug: 'assurance-habitation-etudiant',
+		category: 'assurance-habitation',
+		pillar: false,
+		url: '/assurance-habitation/assurance-habitation-etudiant/',
+		title: 'Assurance habitation étudiant : prix, aides et guide',
+		targetKeywords: ['assurance habitation étudiant', 'logement étudiant', 'CROUS assurance', 'assurance colocation'],
+		suggestedAnchors: [
+			'assurance habitation pour les étudiants',
+			'assurance habitation étudiant',
+			'assurer son logement étudiant',
+			'assurance pour un studio étudiant',
+		],
+	},
+	// ── Assurance Emprunteur (nouveaux) ──
+	{
+		slug: 'garanties-assurance-emprunteur',
+		category: 'assurance-emprunteur',
+		pillar: false,
+		url: '/assurance-emprunteur/garanties-assurance-emprunteur/',
+		title: 'Garanties assurance emprunteur : DC, PTIA, ITT, IPT',
+		targetKeywords: ['garanties assurance emprunteur', 'DC PTIA', 'ITT IPT', 'quotité assurance'],
+		suggestedAnchors: [
+			'garanties de l\'assurance emprunteur',
+			'garanties DC, PTIA, ITT et IPT',
+			'comprendre les garanties emprunteur',
+			'couverture assurance de prêt',
+		],
+	},
+	{
+		slug: 'changer-assurance-emprunteur',
+		category: 'assurance-emprunteur',
+		pillar: false,
+		url: '/assurance-emprunteur/changer-assurance-emprunteur/',
+		title: 'Changer assurance emprunteur : guide étape par étape',
+		targetKeywords: ['changer assurance emprunteur', 'substitution emprunteur', 'loi Lemoine changement', 'résiliation assurance prêt'],
+		suggestedAnchors: [
+			'changer d\'assurance emprunteur',
+			'comment changer d\'assurance de prêt',
+			'substitution d\'assurance emprunteur',
+			'changer d\'assurance de prêt immobilier',
+		],
+	},
 	// ── Réglementation ──
 	{
 		slug: 'guide-reglementation-assurance-france',
@@ -432,6 +490,21 @@ export const articleRegistry: ArticleLink[] = [
 			'obligations de conseil de l\'assureur',
 			'cadre réglementaire du conseil en assurance',
 			'droits de l\'assuré en matière de conseil',
+		],
+	},
+	// ── Réglementation (nouveau) ──
+	{
+		slug: 'mediation-assurance-litige',
+		category: 'reglementation',
+		pillar: false,
+		url: '/reglementation/mediation-assurance-litige/',
+		title: 'Médiation assurance : résoudre un litige en 2026',
+		targetKeywords: ['médiation assurance', 'litige assurance', 'médiateur assurance', 'réclamation assureur'],
+		suggestedAnchors: [
+			'médiation en assurance',
+			'résoudre un litige avec son assureur',
+			'saisir le médiateur de l\'assurance',
+			'recours en cas de litige assurance',
 		],
 	},
 ];
